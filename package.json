@@ -1,0 +1,23 @@
+{
+  "name": "job-portal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:run": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20",
+    "pg": "^8.8.0"
+  }
+}
