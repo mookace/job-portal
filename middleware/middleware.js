@@ -3,20 +3,18 @@ const authMiddleware = {};
 
 authMiddleware.authentication = async (req, res, next) => {
   try {
-    console.log("come in auth");
     let token =
       req.body.token ||
       req.query.token ||
       req.headers["x-access-token"] ||
       req.headers.authorization ||
-      req.headers.token;
+      req.headers.token ||
+      req.cookies.accessToken;
 
-    console.log(token);
     if (token && token.length) {
-      token = token.replace("Bearer ", "");
-      console.log("replace token", token);
+      // token = token.replace("Bearer ", "");
+      // console.log("replace token", token);
       const d = await jwt.verify(token, process.env.JWT_SEC);
-      console.log("users data", d);
       req.user = d;
       return next();
     }

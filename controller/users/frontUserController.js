@@ -24,7 +24,8 @@ userController.registerUser = async (req, res) => {
         "insert into users(fullname,email,password,created_at,phone_no,gender) values($1,$2,$3,current_timestamp,$4,$5) RETURNING *",
         [user.fullname, user.email, passwordHashing, user.phone_no, user.gender]
       );
-      return res.status(200).send({ status: "success", data: newUser.rows });
+      return res.render("login");
+      // return res.status(200).send({ status: "success", data: newUser.rows });
     }
   } catch (error) {
     return res.status(500).send(error);
@@ -63,15 +64,15 @@ userController.login = async (req, res) => {
         const accessToken = jwt.sign(user, process.env.JWT_SEC, {
           expiresIn: "1h",
         });
-
-        return res.json({ accessToken });
+        res.cookie("accessToken", accessToken, { maxAge: 1000 * 60 * 60 * 12 });
+        res.json({ accessToken });
+        return res.render("index");
       } else {
         return res.status(400).send("invalid password");
       }
     } else {
       return res.status(400).send({ message: "invalid email" });
     }
-    // return res.redirect(302, "http://localhost:5830?verify=true");
   } catch (error) {
     res.send(error);
   }
@@ -93,6 +94,11 @@ userController.applyJob = async (req, res) => {
   } catch (error) {
     return res.status(500).send(error);
   }
+};
+
+userController.logout = (req, res) => {
+  res.cookie("accessToken", "", { maxAge: 1 });
+  res.redirect("login");
 };
 
 module.exports = userController;

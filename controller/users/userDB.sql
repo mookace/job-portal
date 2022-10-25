@@ -6,7 +6,8 @@ fullname TEXT NOT NULL,
 email TEXT NOT NULL,
 password TEXT NOT NULL,
 gender text not null,
-is_active boolean default FALSE,
+is_active boolean default('false'),
+roles text default('frontend_user')
 created_at date not null,
 updated_at date,
 deleted_at date
