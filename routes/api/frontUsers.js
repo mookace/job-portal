@@ -9,4 +9,10 @@ router.post("/login", userController.login);
 
 router.get("/getalljobs", middleware.authentication, userController.allJobs);
 
+router.post(
+  "/upload",
+  middleware.upload.single("files"),
+  userController.applyForm
+);
+
 module.exports = router;

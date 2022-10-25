@@ -2,6 +2,7 @@ const userController = {};
 const pool = require("../../dbconfig/dbconfig");
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
+const { query } = require("express");
 
 userController.registerUser = async (req, res) => {
   try {
@@ -35,7 +36,6 @@ userController.registerUser = async (req, res) => {
 // login
 userController.login = async (req, res) => {
   try {
-    console.log("login");
     let { email, password } = req.body;
     email = email.toLowerCase();
     const findemail = await pool.query("select * from users where email=$1", [
@@ -84,6 +84,19 @@ userController.allJobs = async (req, res) => {
       "select * from jobs ORDER BY created_at DESC"
     );
     return res.status(200).send({ status: "success", data: allJobsList.rows });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+userController.applyForm = async (req, res) => {
+  try {
+    let data = req.filename;
+    console.log("data", data);
+    await pool.query("UPDATE users SET cv =$1 WHERE id=$2", [data, 17]);
+
+    res.send(savedData);
+    res.send("file saved success");
   } catch (error) {
     return res.status(500).send(error);
   }

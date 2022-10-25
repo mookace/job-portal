@@ -53,4 +53,21 @@ authMiddleware.authenticationForLogout = async (req, res, next) => {
   }
 };
 
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/files");
+  },
+  filename: (req, file, cb) => {
+    let filename = Date.now() + "--" + file.originalname;
+    req.filename = filename;
+    cb(null, filename);
+  },
+});
+
+authMiddleware.upload = multer({
+  storage: storage,
+});
+
 module.exports = authMiddleware;
