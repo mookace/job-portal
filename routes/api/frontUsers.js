@@ -7,7 +7,8 @@ router.post("/register", userController.registerUser);
 
 router.post("/login", userController.login);
 
-router.get("/getalljobs", middleware.authentication, userController.allJobs);
+// router.get("/getalljobs", middleware.authentication, userController.allJobs);
+router.get("/getalljobs", userController.allJobs);
 
 router.post(
   "/upload",

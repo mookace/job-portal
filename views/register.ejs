@@ -13,7 +13,7 @@
     />
   </head>
   <body>
-    <div>
+    <!-- <div>
       <H1>Register</H1>
     </div>
     <div>
@@ -26,14 +26,49 @@
 
         <label for="password">Password</label>
         <input type="password" name="password" required />
-        <label for="gender">Gender</label>
-        <input type="text" name="gender" required />
+    
 
         <button type="submit">Register</button>
       </form>
-    </div>
+    </div> -->
 
-    <script></script>
+    <div class="container">
+      <h1 class="mt-5 mb-5 text-center text-primary"><b>Register</b></h1>
+      <div class="row mt-5">
+        <div class="col-md-3">&nbsp;</div>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-header">Register</div>
+            <div class="card-body">
+              <form action="/api/user/register" method="post">
+                <div class="mb-3">
+                  <label for="email">Email</label>
+                  <input
+                    type="text"
+                    name="email"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="password">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    class="form-control"
+                    required
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <input type="submit" class="btn btn-primary" value="Submit" />
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"

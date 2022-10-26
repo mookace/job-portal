@@ -4,11 +4,27 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>index</title>
+    <title>job portal</title>
   </head>
   <body>
     <div>
       <h1>Home Page</h1>
+    </div>
+    <div>
+      <ul>
+        <% alljobs.forEach((job)=> { %>
+        <li>
+          <h2><%= job.company_name %></h2>
+          <h2><%= job.job_title %></h2>
+          <h2><%= job.about_us %></h2>
+          <p><%= job.no_of_openings %></p>
+          <p><%= job.job_category %></p>
+          <p><%= job.job_location %></p>
+          <p><%= job.skills %></p>
+        </li>
+        <!-- <hr /> -->
+        <% }) %>
+      </ul>
     </div>
   </body>
 </html>

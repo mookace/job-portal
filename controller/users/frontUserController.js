@@ -12,6 +12,7 @@ userController.registerUser = async (req, res) => {
       "select email from users where email=$1",
       [user.email]
     );
+    console.log("enterEmail", enterEmail.rows);
     if (enterEmail.rows.length != 0) {
       return res
         .status(400)
@@ -21,11 +22,11 @@ userController.registerUser = async (req, res) => {
         user.password,
         process.env.SECRET_KEY
       ).toString();
-      const newUser = await pool.query(
-        "insert into users(fullname,email,password,created_at,phone_no,gender) values($1,$2,$3,current_timestamp,$4,$5) RETURNING *",
-        [user.fullname, user.email, passwordHashing, user.phone_no, user.gender]
+      await pool.query(
+        "insert into users(email,password,created_at) values($1,$2,current_timestamp) RETURNING *",
+        [user.email, passwordHashing]
       );
-      return res.render("login");
+      return res.status(201).redirect("/front/login");
       // return res.status(200).send({ status: "success", data: newUser.rows });
     }
   } catch (error) {
@@ -65,8 +66,8 @@ userController.login = async (req, res) => {
           expiresIn: "1h",
         });
         res.cookie("accessToken", accessToken, { maxAge: 1000 * 60 * 60 * 12 });
-        res.json({ accessToken });
-        return res.render("index");
+        // res.json({ accessToken });
+        return res.redirect("/front/homepage");
       } else {
         return res.status(400).send("invalid password");
       }

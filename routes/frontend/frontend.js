@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const axios = require("axios");
 
-router.get("/homepage", (req, res) => {
+router.get("/homepage", async (req, res) => {
   try {
-    return res.render("index");
+    const alljobs = await axios.get(
+      "http://localhost:8000/api/user/getalljobs"
+    );
+    return res.render("index", { alljobs: alljobs.data.data });
   } catch (error) {
     res.send(error);
   }

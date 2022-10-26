@@ -5,7 +5,6 @@ id SERIAL PRIMARY KEY NOT NULL,
 fullname TEXT NOT NULL,
 email TEXT NOT NULL,
 password TEXT NOT NULL,
-gender text not null,
 is_active boolean default('false'),
 roles text default('frontend_user')
 created_at date not null,
