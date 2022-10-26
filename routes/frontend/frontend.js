@@ -4,9 +4,19 @@ const axios = require("axios");
 
 router.get("/homepage", async (req, res) => {
   try {
+    console.log("hello");
+    const token = req.cookies.accessToken;
+    console.log("token", token);
+    // console.log("accesstoken", accessToken);
     const alljobs = await axios.get(
-      "http://localhost:8000/api/user/getalljobs"
+      "http://localhost:8000/api/user/getalljobs",
+      {
+        headers: { Authorization: token },
+        withCredentials: true,
+      }
     );
+
+    console.log("alljobs", alljobs);
     return res.render("index", { alljobs: alljobs.data.data });
   } catch (error) {
     res.send(error);

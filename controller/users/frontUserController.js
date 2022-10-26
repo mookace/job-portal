@@ -2,7 +2,6 @@ const userController = {};
 const pool = require("../../dbconfig/dbconfig");
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
-const { query } = require("express");
 
 userController.registerUser = async (req, res) => {
   try {
@@ -26,6 +25,7 @@ userController.registerUser = async (req, res) => {
         "insert into users(email,password,created_at) values($1,$2,current_timestamp) RETURNING *",
         [user.email, passwordHashing]
       );
+
       return res.status(201).redirect("/front/login");
       // return res.status(200).send({ status: "success", data: newUser.rows });
     }
@@ -51,23 +51,24 @@ userController.login = async (req, res) => {
         process.env.SECRET_KEY
       );
       const originalPassword = unhashPassword.toString(CryptoJS.enc.Utf8);
-      console.log("original", originalPassword);
+
       if (password === originalPassword) {
-        console.log("true");
         const user = {
           id: data.id,
-          fullname: data.fullname,
           email: data.email,
-          roles: data.roles,
-          phone_no: data.phone_no,
-          gender: data.gender,
+          role: data.role,
         };
         const accessToken = jwt.sign(user, process.env.JWT_SEC, {
-          expiresIn: "1h",
+          expiresIn: "12h",
         });
-        res.cookie("accessToken", accessToken, { maxAge: 1000 * 60 * 60 * 12 });
+        console.log("hello");
+
+        res.cookie("accessToken", accessToken, {
+          httpOnly: true,
+        });
+
         // res.json({ accessToken });
-        return res.redirect("/front/homepage");
+        return res.status(200).redirect("/front/homepage");
       } else {
         return res.status(400).send("invalid password");
       }
@@ -75,7 +76,7 @@ userController.login = async (req, res) => {
       return res.status(400).send({ message: "invalid email" });
     }
   } catch (error) {
-    res.send(error);
+    res.status(500).send(error);
   }
 };
 

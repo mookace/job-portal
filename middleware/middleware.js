@@ -11,6 +11,8 @@ authMiddleware.authentication = async (req, res, next) => {
       req.headers.token ||
       req.cookies.accessToken;
 
+    console.log("accesstoken", token);
+
     if (token && token.length) {
       // token = token.replace("Bearer ", "");
       // console.log("replace token", token);
