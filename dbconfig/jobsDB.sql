@@ -2,7 +2,6 @@ create table jobs(
     id serial primary key ,
     company_name text ,
     job_title text ,
-    about_us text,
     no_of_openings numeric ,
     job_category text,
     job_location text,
@@ -12,7 +11,8 @@ create table jobs(
     skills text,
     job_description text,
     salary text,
-    create_at date ,
+    created_at date ,
     updated_at date,
     deleted_at date,
+    is_deleted boolean default('false')
 );

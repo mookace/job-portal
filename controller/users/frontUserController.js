@@ -64,6 +64,7 @@ userController.login = async (req, res) => {
         console.log("hello");
 
         res.cookie("accessToken", accessToken, {
+          maxAge: 1000 * 60 * 60 * 12,
           httpOnly: true,
         });
 
@@ -82,8 +83,23 @@ userController.login = async (req, res) => {
 
 userController.allJobs = async (req, res) => {
   try {
+    // console.log("hello");
     const allJobsList = await pool.query(
-      "select * from jobs ORDER BY created_at DESC"
+      "select * from jobs where is_deleted='false' ORDER BY created_at DESC"
+    );
+    return res.status(200).send({ status: "success", data: allJobsList.rows });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+userController.singleJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+    console.log(jobId);
+    const allJobsList = await pool.query(
+      "select * from jobs where is_deleted='false' AND id=$1",
+      [jobId]
     );
     return res.status(200).send({ status: "success", data: allJobsList.rows });
   } catch (error) {
@@ -113,7 +129,7 @@ userController.applyJob = async (req, res) => {
 
 userController.logout = (req, res) => {
   res.cookie("accessToken", "", { maxAge: 1 });
-  res.redirect("login");
+  return res.status(200).redirect("/front/login");
 };
 
 module.exports = userController;

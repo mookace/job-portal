@@ -16,11 +16,10 @@ adminController.postJobs = async (req, res) => {
     console.log("job");
     const jobs = req.body;
     const newJobs = await pool.query(
-      "insert into jobs(company_name,job_title,about_us,no_of_openings,job_category,job_location,job_level,experience,expiry_date,skills,job_description,salary,created_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,current_timestamp) returning *",
+      "insert into jobs(company_name,job_title,no_of_openings,job_category,job_location,job_level,experience,expiry_date,skills,job_description,salary,created_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,current_timestamp) returning *",
       [
         jobs.company_name,
         jobs.job_title,
-        jobs.about_us,
         jobs.no_of_openings,
         jobs.job_category,
         jobs.job_location,
@@ -43,6 +42,7 @@ adminController.allJobs = async (req, res) => {
     const allJobsList = await pool.query(
       "select * from jobs ORDER BY created_at DESC"
     );
+    // console.log("sdfghjkncbjvsiuch", allJobsList.rows);
     return res.status(200).send({ status: "success", data: allJobsList.rows });
   } catch (error) {
     return res.status(500).send(error);

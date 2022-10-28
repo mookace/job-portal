@@ -11,11 +11,8 @@ authMiddleware.authentication = async (req, res, next) => {
       req.headers.token ||
       req.cookies.accessToken;
 
-    console.log("accesstoken", token);
-
     if (token && token.length) {
-      // token = token.replace("Bearer ", "");
-      // console.log("replace token", token);
+      token = token.replace("Bearer ", "");
       const d = await jwt.verify(token, process.env.JWT_SEC);
       req.user = d;
       return next();
