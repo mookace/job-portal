@@ -23,23 +23,22 @@ router.get("/homepage", async (req, res) => {
   }
 });
 
-router.get("/search", async (req, res) => {
-  try {
-    // console.log("asjdhasjkhdjk", req.alljobs);
-    const token = req.cookies.accessToken;
-    const alljobs = await axios.get(
-      "http://localhost:8000/api/user/searchjobs?",
-      {
-        headers: { Authorization: "Bearer " + token },
-        withCredentials: true,
-      }
-    );
-
-    return res.render("search", { alljobs: alljobs.data.data });
-  } catch (error) {
-    console.log(error);
-  }
-});
+// router.get("/search", async (req, res) => {
+//   try {
+//     // console.log("asjdhasjkhdjk", req.alljobs);
+//     const token = req.cookies.accessToken;
+//     const alljobs = await axios.get(
+//       "http://localhost:8000/api/user/searchjobs?",
+//       {
+//         headers: { Authorization: "Bearer " + token },
+//         withCredentials: true,
+//       }
+//     );
+//     return res.render("search", { alljobs: alljobs.data.data });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 router.get("/login", (req, res) => {
   try {

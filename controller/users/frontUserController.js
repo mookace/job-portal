@@ -2,6 +2,7 @@ const userController = {};
 const pool = require("../../dbconfig/dbconfig");
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
+const send_mail = require("../../middleware/email");
 
 userController.registerUser = async (req, res) => {
   try {
@@ -38,6 +39,7 @@ userController.registerUser = async (req, res) => {
 userController.login = async (req, res) => {
   try {
     let { email, password } = req.body;
+    console.log("login");
     email = email.toLowerCase();
     const findemail = await pool.query("select * from users where email=$1", [
       email,
@@ -110,6 +112,24 @@ userController.searchJob = async (req, res) => {
   }
 };
 
+userController.profileUpdate = async (req, res) => {
+  try {
+    const userId = req.user;
+    console.log("userid", userId.id);
+    const profile = req.body.fullname;
+    let cvName = req.filename;
+    console.log("body", profile);
+    const profileData = await pool.query(
+      "update users set fullname=$1,cv=$2,updated_at=current_timestamp where id=$3 RETURNING *",
+      [profile, cvName, userId.id]
+    );
+    return res.status(201).redirect("/front/homepage");
+    // return res.status(201).send({ status: "success", data: profileData.rows });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
 userController.singleJob = async (req, res) => {
   try {
     const jobId = req.params.id;
@@ -124,21 +144,18 @@ userController.singleJob = async (req, res) => {
   }
 };
 
-userController.applyForm = async (req, res) => {
-  try {
-    let data = req.filename;
-    console.log("data", data);
-    await pool.query("UPDATE users SET cv =$1 WHERE id=$2", [data, 17]);
-
-    res.send(savedData);
-    res.send("file saved success");
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-};
-
 userController.applyJob = async (req, res) => {
   try {
+    const userData = req.user;
+    console.log("useemail", userData.email);
+    await send_mail(
+      userData.email,
+      "rajbanshimukesh999@gmail.com",
+      userData.email
+    );
+    return res
+      .status(200)
+      .send({ status: "success", message: "Mail send success" });
   } catch (error) {
     return res.status(500).send(error);
   }

@@ -14,41 +14,34 @@
   </head>
   <body>
     <div class="container">
-      <h1 class="mt-5 mb-5 text-center text-primary"><b>Register</b></h1>
+      <h1 class="mt-5 mb-5 text-center text-primary"><b>Profile Update</b></h1>
       <div class="row mt-5">
         <div class="col-md-3">&nbsp;</div>
         <div class="col-md-6">
           <div class="card">
-            <div class="card-header">Register</div>
+            <div class="card-header">Profile Update</div>
             <div class="card-body">
-              <form action="/api/user/register" method="post">
+              <form
+                action="/api/user/profile"
+                method="post"
+                enctype="multipart/form-data"
+              >
                 <div class="mb-3">
-                  <label for="email">Email</label>
+                  <label for="text">Fullname</label>
                   <input
                     type="text"
-                    name="email"
+                    name="fullname"
                     class="form-control"
                     required
                   />
                 </div>
                 <div class="mb-3">
-                  <label for="password">Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    class="form-control"
-                    required
-                  />
+                  <label class="form-label" for="cv">Upload cv</label>
+                  <input type="file" class="form-control" name="cv" />
                 </div>
 
                 <div class="mb-3">
                   <input type="submit" class="btn btn-primary" value="Submit" />
-                </div>
-                <div class="mb-3">
-                  <p>
-                    Already have an account go to
-                    <a href="/front/login">Login Page</a>
-                  </p>
                 </div>
               </form>
             </div>

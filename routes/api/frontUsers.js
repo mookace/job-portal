@@ -13,12 +13,15 @@ router.get("/getalljobs", middleware.authentication, userController.allJobs);
 
 router.post("/searchjobs", middleware.authentication, userController.searchJob);
 
-router.get("/singlejob/:id", userController.singleJob);
-
 router.post(
-  "/upload",
-  middleware.upload.single("files"),
-  userController.applyForm
+  "/profile",
+  middleware.authentication,
+  middleware.upload,
+  userController.profileUpdate
 );
+
+router.post("/sendemail", middleware.authentication, userController.applyJob);
+
+router.get("/singlejob/:id", userController.singleJob);
 
 module.exports = router;
