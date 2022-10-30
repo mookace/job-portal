@@ -61,7 +61,6 @@ adminController.searchById = async (req, res) => {
 
 adminController.searchByjobTitle = async (req, res) => {
   try {
-    console.log("hello search by job title");
     let job_title = req.params.jobtitle;
     job_title = "%" + job_title + "%";
     console.log(job_title);

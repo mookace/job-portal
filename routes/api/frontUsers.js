@@ -11,6 +11,8 @@ router.get("/logout", middleware.authentication, userController.logout);
 
 router.get("/getalljobs", middleware.authentication, userController.allJobs);
 
+router.post("/searchjobs", middleware.authentication, userController.searchJob);
+
 router.get("/singlejob/:id", userController.singleJob);
 
 router.post(

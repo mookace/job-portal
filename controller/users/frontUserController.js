@@ -83,11 +83,28 @@ userController.login = async (req, res) => {
 
 userController.allJobs = async (req, res) => {
   try {
-    // console.log("hello");
+    console.log("no query");
     const allJobsList = await pool.query(
       "select * from jobs where is_deleted='false' ORDER BY created_at DESC"
     );
     return res.status(200).send({ status: "success", data: allJobsList.rows });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+userController.searchJob = async (req, res) => {
+  try {
+    console.log("search job");
+    let job_title = req.body.search;
+    console.log("job", job_title);
+    job_title = "%" + job_title + "%";
+    console.log(job_title);
+    const result = await pool.query(
+      `select * from jobs where job_title LIKE $1 AND is_deleted='false' ORDER BY created_at DESC`,
+      [job_title]
+    );
+    return res.render("search", { alljobs: result.rows });
   } catch (error) {
     return res.status(500).send(error);
   }
