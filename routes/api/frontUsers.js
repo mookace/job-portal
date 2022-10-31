@@ -20,7 +20,7 @@ router.post(
   userController.profileUpdate
 );
 
-router.post("/sendemail", middleware.authentication, userController.applyJob);
+router.get("/sendemail", middleware.authentication, userController.applyJob);
 
 router.get("/singlejob/:id", userController.singleJob);
 

@@ -30,9 +30,6 @@
                   <input type="submit" class="btn btn-primary" value="Search" />
                 </div>
               </form>
-              <!-- <button type="submit" class="btn btn-primary" value="Submit">
-                <i class="fa fa-search"></i>
-              </button> -->
             </div>
           </div>
         </div>
@@ -98,8 +95,14 @@
                   class="list-group-item"
                   style="display: flex; justify-content: space-around"
                 >
-                  <a href="" class="btn btn-success">Apply</a>
-                  <a href="" class="btn btn-primary">View Details</a>
+                  <% if(!onlyjobid.includes(job.id)){ %>
+                  <a
+                    href="<%= 'http://localhost:8000/api/user/sendemail?id=' + job.id %>"
+                    class="btn btn-success"
+                    >Apply</a
+                  >
+                  <% } %>
+                  <!-- <a href="" class="btn btn-primary">View Details</a> -->
                 </li>
               </ul>
             </div>
@@ -108,18 +111,6 @@
         <% }) %>
       </div>
     </div>
-
-    <!-- <script>
-      (async function searchJob(e) {
-        e.preventDefault();
-        console.log(e.value);
-        const baseurl = "http://localhost:8000/api/user/searchjobs?";
-        const res = await fetch(baseurl, {
-          method: "Get",
-        });
-        console.log("baseurl", res);
-      })();
-    </script> -->
 
     <script src="https://use.fontawesome.com/a6508ff195.js"></script>
     <script
