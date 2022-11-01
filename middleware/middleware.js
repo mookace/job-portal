@@ -25,34 +25,9 @@ authMiddleware.authentication = async (req, res, next) => {
   }
 };
 
-authMiddleware.authenticationForLogout = async (req, res, next) => {
-  try {
-    const secretOrKey = await getSetting("auth", "token", "secret_key");
-    let token =
-      req.body.token ||
-      req.query.token ||
-      req.headers["x-access-token"] ||
-      req.headers.authorization ||
-      req.headers.token;
-    if (token && token.length) {
-      token = token.replace("Bearer ", "");
-      const d = await jwt.verify(token, secretOrKey);
-      req.user = d;
-      return next();
-    }
-    return otherHelper.sendResponse(
-      res,
-      HttpStatus.UNAUTHORIZED,
-      false,
-      null,
-      token,
-      "token not found",
-      null
-    );
-  } catch (err) {
-    return next(err);
-  }
-};
+// authMiddleware.authorization=async(req,res)=>{
+
+// }
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

@@ -9,6 +9,7 @@ const logger = require("morgan");
 const pool = require("./dbconfig/dbconfig");
 const routes = require("./routes/index");
 const front = require("./routes/frontend/frontend");
+const admin = require("./routes/frontend/admin");
 
 const PORT = 8000 || process.env.PORT;
 
@@ -31,11 +32,12 @@ pool
   .catch((err) => console.log("Database Connected Failed", err));
 
 // Use API Routes
-app.use("/api", routes);
+app.use("/api", routes); //api routes
 // app.use("/public", express.static(path.join(__dirname, "public")));
 
 // Frontend Routes
-app.use("/front", front);
+app.use("/front", front); //client route
+app.use("/admin", admin); //admin route
 
 app.listen(PORT, (res, err) => {
   if (!err) {

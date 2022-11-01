@@ -1,15 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const adminController = require("../../controller/users/adminUserController");
+const middleware = require("../../middleware/middleware");
 
-router.get("/allusers", adminController.allFrontUserList);
+//New route
+router.post("/login", adminController.login);
 
-router.post("/postjob", adminController.postJobs);
+router.post("/postjob", middleware.authentication, adminController.postJobs);
 
 router.get("/getalljobs", adminController.allJobs);
 
-router.get("/searchid/:id", adminController.searchById);
+router.get("/logout", middleware.authentication, adminController.logout);
 
-router.get("/searchjob/:jobtitle", adminController.searchByjobTitle);
+router.post("/searchjobs", adminController.searchByjobTitle);
+
+router.get("/jobdetails", adminController.jobDetails);
+
+//old route
+router.get("/allusers", adminController.allFrontUserList);
+
+router.get("/searchid/:id", adminController.searchById);
 
 module.exports = router;

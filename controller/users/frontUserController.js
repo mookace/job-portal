@@ -102,13 +102,16 @@ userController.searchJob = async (req, res) => {
     console.log("search job");
     let job_title = req.body.search;
     console.log("job", job_title);
-    job_title = "%" + job_title + "%";
+    job_title = "%" + job_title.toLowerCase() + "%";
     console.log(job_title);
     const result = await pool.query(
       `select * from jobs where job_title LIKE $1 AND is_deleted='false' ORDER BY created_at DESC`,
       [job_title]
     );
-    return res.render("search", { alljobs: result.rows });
+    return res.render("search", {
+      alljobs: result.rows,
+      onlyjobid: result.rows,
+    });
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -177,7 +180,7 @@ userController.applyJob = async (req, res) => {
 
 userController.logout = (req, res) => {
   res.cookie("accessToken", "", { maxAge: 1 });
-  return res.status(200).redirect("/front/login");
+  return res.status(200).render("login");
 };
 
 module.exports = userController;

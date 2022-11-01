@@ -1,6 +1,54 @@
 const adminController = {};
-const { query } = require("express");
 const pool = require("../../dbconfig/dbconfig");
+const jwt = require("jsonwebtoken");
+const CryptoJS = require("crypto-js");
+const send_mail = require("../../middleware/email");
+
+// login
+adminController.login = async (req, res) => {
+  try {
+    let { email, password } = req.body;
+    email = email.toLowerCase();
+    const findemail = await pool.query(
+      "select * from users where email=$1 and role='admin' and is_deleted='false'",
+      [email]
+    );
+    const data = findemail.rows[0];
+    if (data) {
+      const unhashPassword = CryptoJS.AES.decrypt(
+        data.password,
+        process.env.SECRET_KEY
+      );
+      const originalPassword = unhashPassword.toString(CryptoJS.enc.Utf8);
+
+      if (password === originalPassword) {
+        const user = {
+          id: data.id,
+          email: data.email,
+          role: data.role,
+        };
+        const accessToken = jwt.sign(user, process.env.JWT_SEC, {
+          expiresIn: "12h",
+        });
+        console.log("hello");
+
+        res.cookie("accessToken", accessToken, {
+          maxAge: 1000 * 60 * 60 * 12,
+          httpOnly: true,
+        });
+
+        // res.json({ accessToken });
+        return res.status(200).render("homepageAdmin");
+      } else {
+        return res.status(400).send("invalid password");
+      }
+    } else {
+      return res.status(400).send({ message: "invalid email" });
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+};
 
 adminController.allFrontUserList = async (req, res) => {
   try {
@@ -14,7 +62,8 @@ adminController.allFrontUserList = async (req, res) => {
 adminController.postJobs = async (req, res) => {
   try {
     console.log("job");
-    const jobs = req.body;
+    let jobs = req.body;
+    jobs.job_title = jobs.job_title.toLowerCase();
     const newJobs = await pool.query(
       "insert into jobs(company_name,job_title,no_of_openings,job_category,job_location,job_level,experience,expiry_date,skills,job_description,salary,created_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,current_timestamp) returning *",
       [
@@ -31,7 +80,7 @@ adminController.postJobs = async (req, res) => {
         jobs.salary,
       ]
     );
-    return res.status(200).send({ status: "success", data: newJobs.rows });
+    return res.status(200).redirect("/admin/alljobs");
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -39,11 +88,35 @@ adminController.postJobs = async (req, res) => {
 
 adminController.allJobs = async (req, res) => {
   try {
+    console.log("alljobbbs");
     const allJobsList = await pool.query(
-      "select * from jobs ORDER BY created_at DESC"
+      "select * from jobs where is_deleted='false' ORDER BY created_at DESC"
     );
-    // console.log("sdfghjkncbjvsiuch", allJobsList.rows);
     return res.status(200).send({ status: "success", data: allJobsList.rows });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+adminController.jobDetails = async (req, res) => {
+  try {
+    console.log("jobdetails");
+    const jobId = req.query.id;
+    const allUserWithJobId = await pool.query(
+      "select email from users where id in (select user_id from jobapplied where job_id=$1)",
+      [jobId]
+    );
+    const allJobsList = await pool.query(
+      "select * from jobs where is_deleted='false' and id=$1 ORDER BY created_at DESC",
+      [jobId]
+    );
+    console.log("email", allUserWithJobId.rows);
+    console.log("alljobs=", allJobsList.rows);
+    return res.render("jobDetails", {
+      data: allUserWithJobId.rows,
+      alljobs: allJobsList.rows,
+    });
+    // return res.send({ jobId: jobId });
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -61,17 +134,26 @@ adminController.searchById = async (req, res) => {
 
 adminController.searchByjobTitle = async (req, res) => {
   try {
-    let job_title = req.params.jobtitle;
-    job_title = "%" + job_title + "%";
+    console.log("search job");
+    let job_title = req.body.search;
+    console.log("job", job_title);
+    job_title = "%" + job_title.toLowerCase() + "%";
     console.log(job_title);
+
     const result = await pool.query(
-      `select * from jobs where job_title LIKE $1 ORDER BY created_at DESC`,
+      `select * from jobs where job_title LIKE $1 AND is_deleted='false' ORDER BY created_at DESC`,
       [job_title]
     );
-    return res.status(200).send({ status: "success", data: result.rows });
+
+    return res.render("allJobs", { alljobs: result.rows });
   } catch (error) {
     return res.status(500).send(error);
   }
+};
+
+adminController.logout = (req, res) => {
+  res.cookie("accessToken", "", { maxAge: 1 });
+  return res.status(200).render("loginAdmin");
 };
 
 module.exports = adminController;
