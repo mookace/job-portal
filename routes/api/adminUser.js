@@ -8,17 +8,34 @@ router.post("/login", adminController.login);
 
 router.post("/postjob", middleware.authentication, adminController.postJobs);
 
-router.get("/getalljobs", adminController.allJobs);
+router.get("/getalljobs", middleware.authentication, adminController.allJobs);
 
 router.get("/logout", middleware.authentication, adminController.logout);
 
-router.post("/searchjobs", adminController.searchByjobTitle);
+router.post(
+  "/searchjobs",
+  middleware.authentication,
+  adminController.searchByjobTitle
+);
 
-router.get("/jobdetails", adminController.jobDetails);
+router.get(
+  "/jobdetails",
+  middleware.authentication,
+  adminController.jobDetails
+);
 
-router.get("/allusers", adminController.allusers);
+router.get("/allusers", middleware.authentication, adminController.allusers);
 
-router.get("/userdetails", adminController.userDetails);
-//old route
+router.get(
+  "/userdetails",
+  middleware.authentication,
+  adminController.userDetails
+);
+
+router.post(
+  "/searchuser",
+  middleware.authentication,
+  adminController.searchUser
+);
 
 module.exports = router;

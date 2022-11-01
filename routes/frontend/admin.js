@@ -6,6 +6,11 @@ const pool = require("../../dbconfig/dbconfig");
 router.get("/alljobs", async (req, res) => {
   try {
     const token = req.cookies.accessToken;
+    console.log("token", token);
+
+    if (!token) {
+      return res.status(400).send({ message: "No Token available" });
+    }
     const alljobs = await axios.get(
       "http://localhost:8000/api/admin/getalljobs",
       {
@@ -19,7 +24,7 @@ router.get("/alljobs", async (req, res) => {
   }
 });
 
-router.get("/login", (req, res) => {
+router.get("/login", async (req, res) => {
   try {
     return res.render("loginAdmin");
   } catch (error) {
@@ -27,7 +32,7 @@ router.get("/login", (req, res) => {
   }
 });
 
-router.get("/homepage", (req, res) => {
+router.get("/homepage", async (req, res) => {
   try {
     return res.render("homepageAdmin");
   } catch (error) {
@@ -50,8 +55,9 @@ router.get("/allusers", async (req, res) => {
   }
 });
 
-router.get("/logout", (req, res) => {
+router.get("/logout", async (req, res) => {
   try {
+    console.log("frontend logout");
     return res.render("loginAdmin");
   } catch (error) {
     return res.send(error);

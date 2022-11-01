@@ -13,30 +13,41 @@
     />
   </head>
   <body>
-    <div class="container">
-      <div class="row mt-5 mb-5">
-        <div class="col-md-4" style="display: flex; justify-content: center">
-          <div>
-            <a href="/admin/alljobs" class="btn btn-success">Job Details</a>
-          </div>
-        </div>
-        <div class="col-md-4" style="display: flex; justify-content: center">
-          <div>
-            <a href="/admin/allusers" class="btn btn-success">User Details</a>
-          </div>
-        </div>
-        <div class="col-md-4" style="display: flex; justify-content: center">
-          <div>
-            <a
-              href="http://localhost:8000/api/admin/logout"
-              class="btn btn-danger"
-              >Logout</a
-            >
-          </div>
+    <!-- NavBar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container" style="display: flex; justify-content: end">
+        <div>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/admin/alljobs"
+                >Job Details</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/admin/allusers"
+                >User Details</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="http://localhost:8000/api/admin/logout"
+                >LogOut</a
+              >
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
+    </nav>
 
+    <!-- All Data -->
     <div class="container">
       <h1 class="mt-5 mb-5 text-center text-primary"><b>Post Jobs</b></h1>
       <div class="row mt-5 mb-5">

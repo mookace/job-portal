@@ -1,10 +1,12 @@
 const jwt = require("jsonwebtoken");
+const pool = require("../dbconfig/dbconfig");
 const multer = require("multer");
 
 const authMiddleware = {};
 
 authMiddleware.authentication = async (req, res, next) => {
   try {
+    console.log("Enter in authintaction");
     let token =
       req.body.token ||
       req.query.token ||
@@ -16,6 +18,7 @@ authMiddleware.authentication = async (req, res, next) => {
     if (token && token.length) {
       token = token.replace("Bearer ", "");
       const d = await jwt.verify(token, process.env.JWT_SEC);
+      await pool.query("update users set is_active='true' where id=$1", [d.id]);
       req.user = d;
       return next();
     }

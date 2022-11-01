@@ -7,7 +7,9 @@ const send_mail = require("../../middleware/email");
 // login
 adminController.login = async (req, res) => {
   try {
+    console.log("enter in login");
     let { email, password } = req.body;
+    console.log("body", req.body);
     email = email.toLowerCase();
     const findemail = await pool.query(
       "select * from users where email=$1 and role='admin' and is_deleted='false'",
@@ -36,9 +38,7 @@ adminController.login = async (req, res) => {
           maxAge: 1000 * 60 * 60 * 12,
           httpOnly: true,
         });
-
-        // res.json({ accessToken });
-        return res.status(200).render("homepageAdmin");
+        return res.status(200).redirect("/admin/homepage");
       } else {
         return res.status(400).send("invalid password");
       }
@@ -106,7 +106,7 @@ adminController.jobDetails = async (req, res) => {
     console.log("jobdetails");
     const jobId = req.query.id;
     const allUserWithJobId = await pool.query(
-      "select email from users where id in (select user_id from jobapplied where job_id=$1)",
+      "select * from users inner join jobapplied on users.id=jobapplied.user_id where jobapplied.job_id=$1",
       [jobId]
     );
     const allJobsList = await pool.query(
@@ -119,7 +119,6 @@ adminController.jobDetails = async (req, res) => {
       data: allUserWithJobId.rows,
       alljobs: allJobsList.rows,
     });
-    // return res.send({ jobId: jobId });
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -161,9 +160,37 @@ adminController.searchByjobTitle = async (req, res) => {
   }
 };
 
-adminController.logout = (req, res) => {
-  res.cookie("accessToken", "", { maxAge: 1 });
-  return res.status(200).render("loginAdmin");
+adminController.searchUser = async (req, res) => {
+  try {
+    console.log("search user");
+    let userEmail = req.body.search;
+    console.log("user", userEmail);
+    userEmail = "%" + userEmail.toLowerCase() + "%";
+    console.log(userEmail);
+
+    const result = await pool.query(
+      `select * from users where email LIKE $1 AND is_deleted='false'`,
+      [userEmail]
+    );
+
+    return res.render("allusers", { allusers: result.rows });
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+
+adminController.logout = async (req, res) => {
+  try {
+    console.log("backend logout");
+    const user = req.user;
+    await pool.query("update users set is_active='false' where id=$1", [
+      user.id,
+    ]);
+    res.cookie("accessToken", "", { maxAge: 1 });
+    return res.status(200).render("loginAdmin");
+  } catch (error) {
+    return res.status(500).send(error);
+  }
 };
 
 module.exports = adminController;

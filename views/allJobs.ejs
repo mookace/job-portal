@@ -13,7 +13,7 @@
     />
   </head>
   <body>
-    <div class="container">
+    <!-- <div class="container">
       <div class="row mt-5 mb-5">
         <div class="col-md-4">
           <div>
@@ -35,27 +35,60 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="container">
-      <div class="row mt-5 mb-5">
-        <div class="col-md-3">&nbsp;</div>
-        <div class="col-md-6">
-          <form method="post" action="/api/admin/searchjobs">
+    <!-- NavBar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div
+        class="container"
+        style="display: flex; justify-content: space-between"
+      >
+        <div>
+          <form class="d-flex" method="post" action="/api/admin/searchjobs">
             <input
+              class="form-control me-2"
               type="search"
-              id="form1"
-              class="form-control"
-              placeholder="Search"
+              placeholder="Enter Job Title"
+              aria-label="Search"
               name="search"
             />
-            <div>
-              <input type="submit" class="btn btn-primary" value="Search" />
-            </div>
+            <button class="btn btn-outline-success" type="submit">
+              Search
+            </button>
           </form>
         </div>
+        <div>
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/admin/homepage"
+                >Post Job</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/admin/allusers"
+                >User Details</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="http://localhost:8000/api/admin/logout"
+                >LogOut</a
+              >
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </nav>
+
+    <!-- All Data -->
 
     <div class="container">
       <h1 class="mt-5 mb-5 text-center text-primary"><b>All Jobs</b></h1>
@@ -66,7 +99,7 @@
             <div class="card-header">
               <h4><%= job.job_title %></h4>
             </div>
-            <div class="card-body">
+            <div class="card-body overflow-auto" style="height: 350px">
               <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                   <b>Company: </b><%= job.company_name %>
@@ -98,6 +131,10 @@
                 <li class="list-group-item">
                   <b>Salary: </b><%= job.salary %>
                 </li>
+              </ul>
+            </div>
+            <div class="card-footer">
+              <ul class="list-group list-group-flush">
                 <li
                   class="list-group-item"
                   style="display: flex; justify-content: space-around"
