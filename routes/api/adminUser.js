@@ -16,9 +16,9 @@ router.post("/searchjobs", adminController.searchByjobTitle);
 
 router.get("/jobdetails", adminController.jobDetails);
 
-//old route
-router.get("/allusers", adminController.allFrontUserList);
+router.get("/allusers", adminController.allusers);
 
-router.get("/searchid/:id", adminController.searchById);
+router.get("/userdetails", adminController.userDetails);
+//old route
 
 module.exports = router;

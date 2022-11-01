@@ -50,9 +50,12 @@ adminController.login = async (req, res) => {
   }
 };
 
-adminController.allFrontUserList = async (req, res) => {
+adminController.allusers = async (req, res) => {
   try {
-    const allUsers = await pool.query(`select * from users`);
+    const allUsers = await pool.query(
+      `select * from users where is_deleted='false' ORDER BY created_at DESC`
+    );
+
     return res.status(200).send({ status: "success", data: allUsers.rows });
   } catch (error) {
     return res.status(500).send(error);
@@ -122,11 +125,18 @@ adminController.jobDetails = async (req, res) => {
   }
 };
 
-adminController.searchById = async (req, res) => {
+adminController.userDetails = async (req, res) => {
   try {
-    let id = req.params.id;
-    const result = await pool.query(`select * from jobs where id=${id}`);
-    return res.status(200).send({ status: "success", data: result.rows });
+    const userid = req.query.id;
+    console.log("userid", userid);
+    const joinAllTable = await pool.query(
+      "select * from users inner join jobapplied on users.id=jobapplied.user_id inner join jobs on jobapplied.job_id=jobs.id where users.id=$1",
+      [userid]
+    );
+    return res.render("singleUserDetails", {
+      status: "success",
+      data: joinAllTable.rows,
+    });
   } catch (error) {
     return res.status(500).send(error);
   }

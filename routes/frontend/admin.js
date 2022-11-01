@@ -34,9 +34,17 @@ router.get("/homepage", (req, res) => {
     return res.send(error);
   }
 });
-router.get("/allusers", (req, res) => {
+router.get("/allusers", async (req, res) => {
   try {
-    return res.render("allusers");
+    const token = req.cookies.accessToken;
+    const allusers = await axios.get(
+      "http://localhost:8000/api/admin/allusers",
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+      }
+    );
+    return res.render("allusers", { allusers: allusers.data.data });
   } catch (error) {
     return res.send(error);
   }
