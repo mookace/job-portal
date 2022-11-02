@@ -57,6 +57,13 @@
       </div>
     </nav>
 
+    <!-- Message -->
+    <% if(message.length>0){%>
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong><%=message%></strong>
+    </div>
+    <%}%>
     <!-- All Data -->
 
     <div class="container">

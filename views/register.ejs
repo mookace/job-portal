@@ -13,6 +13,15 @@
     />
   </head>
   <body>
+    <!-- Alert message -->
+    <% if(Errmsg.length>0){%>
+    <div class="alert alert-warning alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong><%=Errmsg%></strong>
+    </div>
+    <%}%>
+
+    <!-- All Data -->
     <div class="container">
       <h1 class="mt-5 mb-5 text-center text-primary"><b>Register</b></h1>
       <div class="row mt-5">

@@ -6,7 +6,9 @@ const send_mail = require("../../middleware/email");
 
 userController.registerUser = async (req, res) => {
   try {
+    console.log("enter in register");
     const user = req.body;
+    console.log("sanitize", user);
     user.email = user.email.toLowerCase();
     const enterEmail = await pool.query(
       "select email from users where email=$1",
@@ -70,7 +72,7 @@ userController.login = async (req, res) => {
           httpOnly: true,
         });
 
-        // res.json({ accessToken });
+        req.flash("message", "Successfully Login");
         return res.status(200).redirect("/front/homepage");
       } else {
         return res.status(400).send("invalid password");

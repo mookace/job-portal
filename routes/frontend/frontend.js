@@ -25,6 +25,7 @@ router.get("/homepage", async (req, res) => {
     return res.render("index", {
       alljobs: alljobs.data.data,
       onlyjobid: onlyjobid,
+      message: req.flash("message"),
     });
   } catch (error) {
     res.send(error);
@@ -40,7 +41,7 @@ router.get("/login", (req, res) => {
 });
 router.get("/register", (req, res) => {
   try {
-    return res.render("register");
+    return res.render("register", { Errmsg: req.flash("Errmsg") });
   } catch (error) {
     res.send(error);
   }

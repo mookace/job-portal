@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const flash = require("connect-flash");
 require("dotenv").config();
 
 const logger = require("morgan");
@@ -22,6 +24,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret: "secret",
+    cookie: { maxAge: 1000 * 5 },
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(flash());
 
 //Database Connection
 pool

@@ -2,8 +2,15 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../../controller/users/frontUserController");
 const middleware = require("../../middleware/middleware");
+const validation = require("../../controller/users/frontUserValidate");
+const { check, validationResult } = require("express-validator");
 
-router.post("/register", userController.registerUser);
+router.post(
+  "/register",
+  validation.SanitizeRegister,
+  validation.Registervalidate,
+  userController.registerUser
+);
 
 router.post("/login", userController.login);
 
