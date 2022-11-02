@@ -8,9 +8,8 @@ const OAuth2_client = new OAuth2(
 );
 OAuth2_client.setCredentials({ refresh_token: process.env.refresh_token });
 
-function send_mail(name, admin, recipient) {
+function send_mail(name, adminEmail, job_title, company_name) {
   const accessToken = OAuth2_client.getAccessToken();
-  let maillist = [admin, recipient];
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
@@ -25,10 +24,10 @@ function send_mail(name, admin, recipient) {
   });
 
   const mail_option = {
-    from: "job portal <${rajbanshimukesh999@gmail.com}>",
-    to: maillist,
-    subject: "nodemailer test",
-    html: get_html_message(name),
+    from: "Job Portal <${rajbanshimukesh999@gmail.com}>",
+    to: adminEmail,
+    subject: "Job Apply",
+    html: get_html_message(name, job_title, company_name),
   };
 
   transporter.sendMail(mail_option, function (error) {
@@ -39,8 +38,8 @@ function send_mail(name, admin, recipient) {
   });
 }
 
-function get_html_message(name) {
-  return `<h3>${name} has apply for job.</h3>`;
+function get_html_message(name, job_title, company_name) {
+  return `<h3>${name} has apply for ${job_title} , Company Name : ${company_name}.</h3>`;
 }
 
 module.exports = send_mail;

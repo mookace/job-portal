@@ -16,9 +16,8 @@ userController.registerUser = async (req, res) => {
     );
     console.log("enterEmail", enterEmail.rows);
     if (enterEmail.rows.length != 0) {
-      return res
-        .status(400)
-        .send({ status: "Bad Request", message: "Email already exist" });
+      req.flash("Errmsg", "Email already exist");
+      return res.status(400).redirect("/front/register");
     } else {
       let passwordHashing = CryptoJS.AES.encrypt(
         user.password,
@@ -28,12 +27,11 @@ userController.registerUser = async (req, res) => {
         "insert into users(email,password,created_at) values($1,$2,current_timestamp) RETURNING *",
         [user.email, passwordHashing]
       );
-
+      req.flash("message", "Successfully Register");
       return res.status(201).redirect("/front/login");
-      // return res.status(200).send({ status: "success", data: newUser.rows });
     }
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ message: "internal server error", error });
   }
 };
 
@@ -75,13 +73,15 @@ userController.login = async (req, res) => {
         req.flash("message", "Successfully Login");
         return res.status(200).redirect("/front/homepage");
       } else {
-        return res.status(400).send("invalid password");
+        req.flash("Errmsg", "invalid password");
+        return res.status(400).redirect("/front/login");
       }
     } else {
-      return res.status(400).send({ message: "invalid email" });
+      req.flash("Errmsg", "invalid email");
+      return res.status(400).redirect("/front/login");
     }
   } catch (error) {
-    res.status(500).send(error);
+    return res.status(500).send({ message: "internal server error", error });
   }
 };
 
@@ -95,27 +95,29 @@ userController.allJobs = async (req, res) => {
       .status(200)
       .send({ status: "success", data: allJobsList.rows, userid: userid });
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).json({ message: "internal server error", error });
   }
 };
 
 userController.searchJob = async (req, res) => {
   try {
-    console.log("search job");
-    let job_title = req.body.search;
-    console.log("job", job_title);
+    const user = req.user;
+    console.log("lets see", user.id);
+    let job_title = req.body.search || req.query.job_title;
     job_title = "%" + job_title.toLowerCase() + "%";
-    console.log(job_title);
-    const result = await pool.query(
-      `select * from jobs where job_title LIKE $1 AND is_deleted='false' ORDER BY created_at DESC`,
-      [job_title]
-    );
-    return res.render("search", {
-      alljobs: result.rows,
-      onlyjobid: result.rows,
-    });
+
+    return res
+      .status(200)
+      .redirect(
+        "/front/searchjobs?job_title=" + job_title + "&userid=" + user.id
+      );
+    // return res.render("search", {
+    //   userid: user.id,
+    //   alljobs: result.rows,
+    //   onlyjobid: onlyjobid,
+    // });
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).json({ message: "internal server error", error });
   }
 };
 
@@ -126,29 +128,47 @@ userController.profileUpdate = async (req, res) => {
     const profile = req.body.fullname;
     let cvName = req.filename;
     console.log("body", profile);
-    const profileData = await pool.query(
+    await pool.query(
       "update users set fullname=$1,cv=$2,updated_at=current_timestamp where id=$3 RETURNING *",
       [profile, cvName, userId.id]
     );
+    req.flash("message", "Profile Updated Successfully");
     return res.status(201).redirect("/front/homepage");
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ message: "internal server error", error });
   }
 };
 
-userController.singleJob = async (req, res) => {
+userController.singleUser = async (req, res) => {
   try {
-    const jobId = req.params.id;
-    console.log(jobId);
-    const allJobsList = await pool.query(
-      "select * from jobs where is_deleted='false' AND id=$1",
-      [jobId]
-    );
-    return res.status(200).send({ status: "success", data: allJobsList.rows });
+    const userid = req.query.id;
+    console.log("query user id", userid);
+
+    const userDetails = await pool.query("select * from users where id=$1", [
+      userid,
+    ]);
+    console.log("userdetail", userDetails.rows[0]);
+    return res.status(200).render("profile", { userData: userDetails.rows[0] });
+    // req.flash("message", "Profile Updated Successfully");
+    // return res.status(201).redirect("/front/homepage");
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ message: "internal server error", error });
   }
 };
+
+// userController.singleJob = async (req, res) => {
+//   try {
+//     const jobId = req.params.id;
+//     console.log(jobId);
+//     const allJobsList = await pool.query(
+//       "select * from jobs where is_deleted='false' AND id=$1",
+//       [jobId]
+//     );
+//     return res.status(200).send({ status: "success", data: allJobsList.rows });
+//   } catch (error) {
+//     return res.status(500).send({ message: "internal server error", error });
+//   }
+// };
 
 userController.applyJob = async (req, res) => {
   try {
@@ -161,34 +181,98 @@ userController.applyJob = async (req, res) => {
     const newData = data.map((e) => e.cv);
     console.log("checkcv", newData);
     if (newData[0] == null) {
-      return res.status(400).send({ message: "please update your profile" });
+      req.flash("Errmsg", "Please update your profile");
+      return res.status(400).redirect("/front/homepage");
     } else {
+      const alladmin = await pool.query(
+        "select * from users where role='admin' and is_deleted='false'"
+      );
+      console.log("alladmin", alladmin.rows);
+      const allAdminEmail = alladmin.rows.map((e) => e.email);
+      console.log("admin email only", allAdminEmail);
+
       await pool.query(
         "insert into jobapplied(job_id,user_id,applied_at) values($1,$2,current_timestamp) returning *",
         [jobId, userData.id]
       );
-      await send_mail(
-        userData.email,
-        "rajbanshimukesh999@gmail.com",
-        userData.email
+      const jobDetails = await pool.query("select * from jobs where id=$1", [
+        jobId,
+      ]);
+
+      await allAdminEmail.forEach((email) =>
+        send_mail(
+          userData.email,
+          email,
+          jobDetails.rows[0].job_title,
+          jobDetails.rows[0].company_name
+        )
       );
+      req.flash("message", "Job applied successfully");
       return res.status(200).redirect("/front/homepage");
-      // return res.status(200).redirect("/front/homepage?userID=" + userData.id);
     }
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ message: "internal server error", error });
+  }
+};
+
+userController.searchApplyJob = async (req, res) => {
+  try {
+    const userData = req.user;
+    const jobId = req.query.id;
+    let checkCV = await pool.query("select cv from users where email=$1", [
+      userData.email,
+    ]);
+    const data = checkCV.rows;
+    const newData = data.map((e) => e.cv);
+    console.log("checkcv", newData);
+    if (newData[0] == null) {
+      req.flash("Errmsg", "Please update your profile");
+      return res.status(400).redirect("/front/homepage");
+    } else {
+      const alladmin = await pool.query(
+        "select * from users where role='admin' and is_deleted='false'"
+      );
+      console.log("alladmin", alladmin.rows);
+      const allAdminEmail = alladmin.rows.map((e) => e.email);
+      console.log("admin email only", allAdminEmail);
+
+      await pool.query(
+        "insert into jobapplied(job_id,user_id,applied_at) values($1,$2,current_timestamp) returning *",
+        [jobId, userData.id]
+      );
+      const jobDetails = await pool.query("select * from jobs where id=$1", [
+        jobId,
+      ]);
+
+      await allAdminEmail.forEach((email) =>
+        send_mail(
+          userData.email,
+          email,
+          jobDetails.rows[0].job_title,
+          jobDetails.rows[0].company_name
+        )
+      );
+      req.flash("message", "Job applied successfully");
+      return res
+        .status(200)
+        .redirect(
+          "/api/user/searchjobs?job_title=" + jobDetails.rows[0].job_title
+        );
+    }
+  } catch (error) {
+    return res.status(500).send({ message: "internal server error", error });
   }
 };
 
 userController.logout = async (req, res) => {
   try {
-    console.log("front end api logout");
     const user = req.user;
     await pool.query(`update users set is_active='false' where id=${user.id}`);
     res.cookie("accessToken", "", { maxAge: 1 });
-    return res.status(200).render("login");
+    req.flash("message", "Successfully Logout");
+    return res.status(200).redirect("/front/login");
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ message: "internal server error", error });
   }
 };
 

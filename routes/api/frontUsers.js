@@ -34,6 +34,12 @@ router.post(
   middleware.authorizationForUser,
   userController.searchJob
 );
+router.get(
+  "/searchjobs",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  userController.searchJob
+);
 
 router.post(
   "/profile",
@@ -44,6 +50,14 @@ router.post(
 );
 
 router.get(
+  "/singleuser",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  middleware.upload,
+  userController.singleUser
+);
+
+router.get(
   "/sendemail",
   middleware.authentication,
   middleware.authorizationForUser,
@@ -51,10 +65,17 @@ router.get(
 );
 
 router.get(
-  "/singlejob/:id",
+  "/searchapplyjob",
   middleware.authentication,
   middleware.authorizationForUser,
-  userController.singleJob
+  userController.searchApplyJob
 );
+
+// router.get(
+//   "/singlejob/:id",
+//   middleware.authentication,
+//   middleware.authorizationForUser,
+//   userController.singleJob
+// );
 
 module.exports = router;
