@@ -178,9 +178,16 @@ userController.applyJob = async (req, res) => {
   }
 };
 
-userController.logout = (req, res) => {
-  res.cookie("accessToken", "", { maxAge: 1 });
-  return res.status(200).render("login");
+userController.logout = async (req, res) => {
+  try {
+    console.log("front end api logout");
+    const user = req.user;
+    await pool.query(`update users set is_active='false' where id=${user.id}`);
+    res.cookie("accessToken", "", { maxAge: 1 });
+    return res.status(200).render("login");
+  } catch (error) {
+    return res.status(500).send(error);
+  }
 };
 
 module.exports = userController;

@@ -6,35 +6,59 @@ const middleware = require("../../middleware/middleware");
 //New route
 router.post("/login", adminController.login);
 
-router.post("/postjob", middleware.authentication, adminController.postJobs);
+router.post(
+  "/postjob",
+  middleware.authentication,
+  middleware.authorizationForAdmin,
+  adminController.postJobs
+);
 
-router.get("/getalljobs", middleware.authentication, adminController.allJobs);
+router.get(
+  "/getalljobs",
+  middleware.authentication,
+  middleware.authorizationForAdmin,
+  adminController.allJobs
+);
 
-router.get("/logout", middleware.authentication, adminController.logout);
+router.get(
+  "/logout",
+  middleware.authenticationForLogout,
+  middleware.authorizationForAdmin,
+  adminController.logout
+);
 
 router.post(
   "/searchjobs",
   middleware.authentication,
+  middleware.authorizationForAdmin,
   adminController.searchByjobTitle
 );
 
 router.get(
   "/jobdetails",
   middleware.authentication,
+  middleware.authorizationForAdmin,
   adminController.jobDetails
 );
 
-router.get("/allusers", middleware.authentication, adminController.allusers);
+router.get(
+  "/allusers",
+  middleware.authentication,
+  middleware.authorizationForAdmin,
+  adminController.allusers
+);
 
 router.get(
   "/userdetails",
   middleware.authentication,
+  middleware.authorizationForAdmin,
   adminController.userDetails
 );
 
 router.post(
   "/searchuser",
   middleware.authentication,
+  middleware.authorizationForAdmin,
   adminController.searchUser
 );
 

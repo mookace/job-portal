@@ -13,35 +13,6 @@
     />
   </head>
   <body>
-    <!-- <div class="container">
-      <div class="row mt-5 mb-5">
-        <div class="col-md-3">
-          <div>
-            <a href="/admin/homepage" class="btn btn-success">Post Job</a>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div>
-            <a href="/admin/alljobs" class="btn btn-success">View All Jobs</a>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div>
-            <a href="/admin/allusers" class="btn btn-success">User Details</a>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div>
-            <a
-              href="http://localhost:8000/api/admin/logout"
-              class="btn btn-danger"
-              >Logout</a
-            >
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <!-- NavBar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container" style="display: flex; justify-content: end">
@@ -83,77 +54,6 @@
         </div>
       </div>
     </nav>
-
-    <!-- All Jobs -->
-    <!-- <div class="container">
-      <h1 class="mt-5 mb-5 text-center text-primary"><b>Job Details</b></h1>
-      <div
-        class="row mt-5 mb-5"
-        style="display: flex; justify-content: space-evenly"
-      >
-        <div class="col-md-4 mb-5">
-          <% alljobs.forEach((job)=> { %>
-          <div class="card">
-            <div class="card-header">
-              <h4><%= job.job_title %></h4>
-            </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  <b>Company: </b><%= job.company_name %>
-                </li>
-                <li class="list-group-item">
-                  <b>No of opening: </b><%= job.no_of_openings %>
-                </li>
-                <li class="list-group-item">
-                  <b>Category: </b><%= job.job_category %>
-                </li>
-                <li class="list-group-item">
-                  <b>Location: </b><%= job.job_location %>
-                </li>
-                <li class="list-group-item">
-                  <b>Level: </b><%= job.job_level %>
-                </li>
-                <li class="list-group-item">
-                  <b>Experience:</b><%= job.experience %>
-                </li>
-                <li class="list-group-item">
-                  <b>Expiry date: </b><%= job.expiry_date %>
-                </li>
-                <li class="list-group-item">
-                  <b>Skills: </b><%= job.skills %>
-                </li>
-                <li class="list-group-item">
-                  <b>Description: </b><%= job.job_description %>
-                </li>
-                <li class="list-group-item">
-                  <b>Salary: </b><%= job.salary %>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <% }) %>
-        </div>
-       
-
-        <div class="col-md-4 mb-5">
-          <div class="card">
-            <div class="card-header">
-              <h4>List of Users applied for this job</h4>
-            </div>
-            <div class="card-body">
-              <ul class="list-group list-group-flush">
-                <% data.forEach((e)=> { %>
-                <li class="list-group-item">
-                  <b>User Email: </b><%= e.email %>
-                </li>
-                <% }) %>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
 
     <!-- New All Data -->
     <div class="container">

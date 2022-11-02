@@ -9,7 +9,6 @@ adminController.login = async (req, res) => {
   try {
     console.log("enter in login");
     let { email, password } = req.body;
-    console.log("body", req.body);
     email = email.toLowerCase();
     const findemail = await pool.query(
       "select * from users where email=$1 and role='admin' and is_deleted='false'",
@@ -22,8 +21,10 @@ adminController.login = async (req, res) => {
         process.env.SECRET_KEY
       );
       const originalPassword = unhashPassword.toString(CryptoJS.enc.Utf8);
-
+      console.log("originalPassword", originalPassword);
       if (password === originalPassword) {
+        console.log("dd12", data);
+
         const user = {
           id: data.id,
           email: data.email,
@@ -46,7 +47,7 @@ adminController.login = async (req, res) => {
       return res.status(400).send({ message: "invalid email" });
     }
   } catch (error) {
-    res.status(500).send(error);
+    res.status(500).send({ error });
   }
 };
 
@@ -65,10 +66,11 @@ adminController.allusers = async (req, res) => {
 adminController.postJobs = async (req, res) => {
   try {
     console.log("job");
+    const user = req.user;
     let jobs = req.body;
     jobs.job_title = jobs.job_title.toLowerCase();
     const newJobs = await pool.query(
-      "insert into jobs(company_name,job_title,no_of_openings,job_category,job_location,job_level,experience,expiry_date,skills,job_description,salary,created_at) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,current_timestamp) returning *",
+      "insert into jobs(company_name,job_title,no_of_openings,job_category,job_location,job_level,experience,expiry_date,skills,job_description,salary,created_at,posted_by) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,current_timestamp,$12) returning *",
       [
         jobs.company_name,
         jobs.job_title,
@@ -81,6 +83,7 @@ adminController.postJobs = async (req, res) => {
         jobs.skills,
         jobs.job_description,
         jobs.salary,
+        user.email,
       ]
     );
     return res.status(200).redirect("/admin/alljobs");
@@ -97,7 +100,7 @@ adminController.allJobs = async (req, res) => {
     );
     return res.status(200).send({ status: "success", data: allJobsList.rows });
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ error });
   }
 };
 

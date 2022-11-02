@@ -11,8 +11,9 @@ create table jobs(
     skills text,
     job_description text,
     salary text,
-    created_at date ,
-    updated_at date,
-    deleted_at date,
+    posted_by text,
+    created_at TIMESTAMPTZ not null ,
+    updated_at TIMESTAMPTZ,
+    deleted_at TIMESTAMPTZ,
     is_deleted boolean default('false')
 );

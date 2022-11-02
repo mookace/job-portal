@@ -8,8 +8,8 @@ role text default('users') not null,
 is_active boolean default('false'),
 fullname TEXT ,
 cv text,
-created_at date not null,
-updated_at date,
-deleted_at date,
+created_at TIMESTAMPTZ not null,
+updated_at TIMESTAMPTZ,
+deleted_at TIMESTAMPTZ,
 is_deleted boolean default('false')
 );

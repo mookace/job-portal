@@ -5,11 +5,11 @@ const pool = require("../../dbconfig/dbconfig");
 
 router.get("/alljobs", async (req, res) => {
   try {
+    console.log("enter in axios all job");
     const token = req.cookies.accessToken;
-    console.log("token", token);
 
     if (!token) {
-      return res.status(400).send({ message: "No Token available" });
+      return res.send({ message: "No Token available" });
     }
     const alljobs = await axios.get(
       "http://localhost:8000/api/admin/getalljobs",
@@ -20,7 +20,7 @@ router.get("/alljobs", async (req, res) => {
     );
     return res.render("alljobs", { alljobs: alljobs.data.data });
   } catch (error) {
-    res.send(error);
+    return res.send(error);
   }
 });
 
@@ -42,6 +42,9 @@ router.get("/homepage", async (req, res) => {
 router.get("/allusers", async (req, res) => {
   try {
     const token = req.cookies.accessToken;
+    if (!token) {
+      return res.send({ message: "No Token available" });
+    }
     const allusers = await axios.get(
       "http://localhost:8000/api/admin/allusers",
       {

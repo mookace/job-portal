@@ -7,21 +7,47 @@ router.post("/register", userController.registerUser);
 
 router.post("/login", userController.login);
 
-router.get("/logout", middleware.authentication, userController.logout);
+router.get(
+  "/logout",
+  middleware.authenticationForLogout,
+  middleware.authorizationForUser,
+  userController.logout
+);
 
-router.get("/getalljobs", middleware.authentication, userController.allJobs);
+router.get(
+  "/getalljobs",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  userController.allJobs
+);
 
-router.post("/searchjobs", middleware.authentication, userController.searchJob);
+router.post(
+  "/searchjobs",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  userController.searchJob
+);
 
 router.post(
   "/profile",
   middleware.authentication,
+  middleware.authorizationForUser,
   middleware.upload,
   userController.profileUpdate
 );
 
-router.get("/sendemail", middleware.authentication, userController.applyJob);
+router.get(
+  "/sendemail",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  userController.applyJob
+);
 
-router.get("/singlejob/:id", userController.singleJob);
+router.get(
+  "/singlejob/:id",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  userController.singleJob
+);
 
 module.exports = router;

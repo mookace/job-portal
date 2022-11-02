@@ -4,5 +4,5 @@ create table jobapplied(
     user_id int not null,
     foreign key(job_id) references jobs(id),
     foreign key(user_id) references users(id),
-    applied_at date
+    applied_at TIMESTAMPTZ
 )
