@@ -1,5 +1,6 @@
 const { check, validationResult } = require("express-validator");
 
+// Sanitizer Code
 exports.SanitizeRegister = [
   check("email").trim(),
   check("password").trim(),
@@ -8,6 +9,17 @@ exports.SanitizeRegister = [
     next();
   },
 ];
+
+exports.UpdateProfileSanitizer = [
+  check("fullname").trim(),
+  check("cv").trim(),
+  (req, res, next) => {
+    console.log("enter sanitize");
+    next();
+  },
+];
+
+// Validation Code
 
 exports.Registervalidate = [
   check("email", "Invalid Email").isEmail(),

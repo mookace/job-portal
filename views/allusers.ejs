@@ -48,7 +48,15 @@
                 class="nav-link active"
                 aria-current="page"
                 href="/admin/alljobs"
-                >Jobs Details</a
+                >All Jobs</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/admin/allusers"
+                >All Users</a
               >
             </li>
             <li class="nav-item">
@@ -56,7 +64,7 @@
                 class="nav-link active"
                 aria-current="page"
                 href="http://localhost:8000/api/admin/logout"
-                >LogOut</a
+                >Logut</a
               >
             </li>
           </ul>
@@ -75,6 +83,7 @@
             <th scope="col">Created Date</th>
             <th scope="col">Update Date</th>
             <th scope="col">View Details</th>
+            <th scope="col">Edit/Delete</th>
           </tr>
         </thead>
         <tbody>
@@ -92,6 +101,30 @@
               >
                 View Details
               </a>
+            </td>
+            <td
+              style="
+                display: flex;
+                justify-content: space-around;
+                align-item: center;
+              "
+            >
+              <div>
+                <a
+                  href="<%= 'http://localhost:8000/api/admin/updateprofile?id=' + user.id %>"
+                  class="link-primary"
+                >
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </a>
+              </div>
+              <div>
+                <a
+                  href="<%= 'http://localhost:8000/api/admin/deleteprofile?id=' + user.id %>"
+                  class="link-danger"
+                >
+                  <i class="fa fa-trash" aria-hidden="true"></i>
+                </a>
+              </div>
             </td>
           </tr>
           <%})%>

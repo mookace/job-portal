@@ -3,7 +3,6 @@ const router = express.Router();
 const userController = require("../../controller/users/frontUserController");
 const middleware = require("../../middleware/middleware");
 const validation = require("../../controller/users/frontUserValidate");
-const { check, validationResult } = require("express-validator");
 
 router.post(
   "/register",
@@ -34,6 +33,7 @@ router.post(
   middleware.authorizationForUser,
   userController.searchJob
 );
+
 router.get(
   "/searchjobs",
   middleware.authentication,
@@ -46,6 +46,7 @@ router.post(
   middleware.authentication,
   middleware.authorizationForUser,
   middleware.upload,
+  validation.UpdateProfileSanitizer,
   userController.profileUpdate
 );
 
@@ -53,7 +54,6 @@ router.get(
   "/singleuser",
   middleware.authentication,
   middleware.authorizationForUser,
-  middleware.upload,
   userController.singleUser
 );
 
@@ -71,11 +71,18 @@ router.get(
   userController.searchApplyJob
 );
 
-// router.get(
-//   "/singlejob/:id",
-//   middleware.authentication,
-//   middleware.authorizationForUser,
-//   userController.singleJob
-// );
+router.get(
+  "/jobid",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  userController.getJobIdFromJobapplied
+);
+
+router.get(
+  "/searchresult",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  userController.searchResult
+);
 
 module.exports = router;

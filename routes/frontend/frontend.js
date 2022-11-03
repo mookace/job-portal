@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
-const pool = require("../../dbconfig/dbconfig");
 
 router.get("/homepage", async (req, res) => {
   try {
@@ -14,12 +13,13 @@ router.get("/homepage", async (req, res) => {
       }
     );
 
-    const apply = await pool.query(
-      "select job_id from jobapplied where user_id=$1",
-      [alljobs.data.userid]
-    );
+    const apply = await axios.get("http://localhost:8000/api/user/jobid", {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+      params: { userid: alljobs.data.userid },
+    });
 
-    const alljobid = apply.rows;
+    const alljobid = apply.data.data;
     const onlyjobid = alljobid.map((e) => e.job_id);
 
     return res.render("index", {
@@ -55,7 +55,16 @@ router.get("/register", async (req, res) => {
 
 router.get("/profile", async (req, res) => {
   try {
-    return res.render("profile");
+    const token = req.cookies.accessToken;
+    const singleUser = await axios.get(
+      "http://localhost:8000/api/user/singleuser",
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+        params: { userid: req.query.userid },
+      }
+    );
+    return res.render("profile", { userData: singleUser.data.userData });
   } catch (error) {
     return res.status(500).send({ message: "internal server error", error });
   }
@@ -64,27 +73,36 @@ router.get("/profile", async (req, res) => {
 router.get("/searchjobs", async (req, res) => {
   try {
     const job_title = req.query.job_title;
+    console.log("job_title", job_title);
     const userid = req.query.userid;
-    console.log("query", req.query.job_title);
-    console.log("userid", req.query.userid);
+    console.log("usrid,use", userid);
 
-    // const token = req.cookies.accessToken;
-    const result = await pool.query(
-      `select * from jobs where job_title LIKE $1 AND is_deleted='false' ORDER BY created_at DESC`,
-      [job_title]
+    const token = req.cookies.accessToken;
+    const result = await axios.get(
+      "http://localhost:8000/api/user/searchresult",
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+        params: { job_title: job_title },
+      }
     );
-    console.log("alljobs", result.rows);
-    const apply = await pool.query(
-      "select job_id from jobapplied where user_id=$1",
-      [userid]
-    );
-    console.log("apply", apply.rows);
-    const alljobid = apply.rows;
+
+    console.log("results", result.data);
+
+    const apply = await axios.get("http://localhost:8000/api/user/jobid", {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+      params: { userid: userid },
+    });
+
+    console.log("apply", apply.data);
+
+    const alljobid = apply.data.data;
     const onlyjobid = alljobid.map((e) => e.job_id);
-    console.log("onlyjobid", onlyjobid);
+
     return res.render("search", {
       userid: userid,
-      alljobs: result.rows,
+      alljobs: result.data.data,
       onlyjobid: onlyjobid,
       message: req.flash("message"),
       Errmsg: req.flash("Errmsg"),

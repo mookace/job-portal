@@ -48,7 +48,7 @@
                 class="nav-link active"
                 aria-current="page"
                 href="/admin/allusers"
-                >User Details</a
+                >All Users</a
               >
             </li>
             <li class="nav-item">
@@ -63,6 +63,22 @@
         </div>
       </div>
     </nav>
+
+    <!-- Alert message -->
+    <% if(Errmsg.length>0){%>
+    <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong><%=Errmsg%></strong>
+    </div>
+    <%}%>
+
+    <!-- Success message -->
+    <% if(message.length>0){%>
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong><%=message%></strong>
+    </div>
+    <%}%>
 
     <!-- All Data -->
 

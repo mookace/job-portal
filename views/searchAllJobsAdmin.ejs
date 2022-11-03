@@ -22,26 +22,31 @@
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="/front/homepage"
+                href="/admin/homepage"
+                >Post Job</a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                aria-current="page"
+                href="/admin/alljobs"
                 >All Jobs</a
               >
             </li>
-            <% if(userid){%>
             <li class="nav-item">
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="<%= 'http://localhost:8000/api/user/singleuser?id=' + userid %>"
-                >Update Profile</a
+                href="/admin/allusers"
+                >User Details</a
               >
             </li>
-            <%}%>
-
             <li class="nav-item">
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="http://localhost:8000/api/user/logout"
+                href="http://localhost:8000/api/admin/logout"
                 >Logout</a
               >
             </li>
@@ -65,10 +70,12 @@
       <strong><%=message%></strong>
     </div>
     <%}%>
+
     <!-- All Data -->
 
     <div class="container">
       <h1 class="mt-5 mb-5 text-center text-primary"><b>Search Jobs</b></h1>
+
       <div class="row mt-5 mb-5">
         <% alljobs.forEach((job)=> { %>
         <div class="col-md-4 mb-5">
@@ -116,15 +123,11 @@
                   class="list-group-item"
                   style="display: flex; justify-content: space-around"
                 >
-                  <% if(!onlyjobid.includes(job.id)){ %>
                   <a
-                    href="<%= 'http://localhost:8000/api/user/searchapplyjob?id=' + job.id %>"
-                    class="btn btn-success"
-                    >Apply</a
+                    href="<%= 'http://localhost:8000/api/admin/jobdetails?id=' + job.id %>"
+                    class="btn btn-primary"
+                    >View Details</a
                   >
-                  <% }else{ %>
-                  <button class="btn btn-primary">Already Applied</button>
-                  <%}%>
                 </li>
               </ul>
             </div>

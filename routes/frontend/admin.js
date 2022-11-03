@@ -5,11 +5,9 @@ const pool = require("../../dbconfig/dbconfig");
 
 router.get("/alljobs", async (req, res) => {
   try {
-    console.log("enter in axios all job");
     const token = req.cookies.accessToken;
-
     if (!token) {
-      return res.send({ message: "No Token available" });
+      return res.status(401).send({ message: "No Token available" });
     }
     const alljobs = await axios.get(
       "http://localhost:8000/api/admin/getalljobs",
@@ -18,15 +16,47 @@ router.get("/alljobs", async (req, res) => {
         withCredentials: true,
       }
     );
-    return res.render("alljobs", { alljobs: alljobs.data.data });
+    return res.render("alljobs", {
+      alljobs: alljobs.data.data,
+      message: req.flash("message"),
+      Errmsg: req.flash("Errmsg"),
+    });
   } catch (error) {
     return res.send(error);
   }
 });
 
+router.get("/searchjobs", async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+    if (!token) {
+      return res.status(401).send({ message: "No Token available" });
+    }
+    const alljobs = await axios.get(
+      "http://localhost:8000/api/admin/getalljobs",
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+        params: { job_title: req.query.job_title },
+      }
+    );
+
+    return res.render("searchAllJobsAdmin", {
+      alljobs: alljobs.data.data,
+      message: req.flash("message"),
+      Errmsg: req.flash("Errmsg"),
+    });
+  } catch (error) {
+    return res.status(500).send({ message: "Internal Server Error", error });
+  }
+});
+
 router.get("/login", async (req, res) => {
   try {
-    return res.render("loginAdmin");
+    return res.render("loginAdmin", {
+      message: req.flash("message"),
+      Errmsg: req.flash("Errmsg"),
+    });
   } catch (error) {
     return res.send(error);
   }
@@ -34,12 +64,89 @@ router.get("/login", async (req, res) => {
 
 router.get("/homepage", async (req, res) => {
   try {
-    return res.render("homepageAdmin");
+    return res.render("homepageAdmin", {
+      message: req.flash("message"),
+      Errmsg: req.flash("Errmsg"),
+    });
   } catch (error) {
     return res.send(error);
   }
 });
+
+router.get("/jobdetails", async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+    if (!token) {
+      return res.status(401).send({ message: "No Token available" });
+    }
+    const all = await axios.get("http://localhost:8000/api/admin/jobdetails", {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+      params: { jobidjob: req.query.jobId },
+    });
+
+    return res.render("jobDetails", {
+      data: all.data.data,
+      alljobs: all.data.alljobs,
+    });
+  } catch (error) {
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
 router.get("/allusers", async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+    if (!token) {
+      return res.send({ message: "No Token available" });
+    }
+    const allusers = await axios.get(
+      "http://localhost:8000/api/admin/allusers",
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+        params: { email: req.query.email },
+      }
+    );
+    return res.render("allusers", {
+      allusers: allusers.data.data,
+      message: req.flash("message"),
+      Errmsg: req.flash("Errmsg"),
+    });
+  } catch (error) {
+    return res.send(error);
+  }
+});
+
+router.get("/userdetails", async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+    if (!token) {
+      return res.send({ message: "No Token available" });
+    }
+    const allusers = await axios.get(
+      "http://localhost:8000/api/admin/userdetails",
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+        params: { idid: req.query.userid },
+      }
+    );
+    return res.render("singleUserDetails", { data: allusers.data.data });
+  } catch (error) {
+    return res.send(error);
+  }
+});
+
+router.get("/updateprofile", async (req, res) => {
+  try {
+    return res.render("adminUpdateUserProfile");
+  } catch (error) {
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+});
+
+router.get("/deleteprofile", async (req, res) => {
   try {
     const token = req.cookies.accessToken;
     if (!token) {
@@ -52,18 +159,33 @@ router.get("/allusers", async (req, res) => {
         withCredentials: true,
       }
     );
-    return res.render("allusers", { allusers: allusers.data.data });
+    const deleteuser = await axios.get(
+      "http://localhost:8000/api/admin/deleteprofile",
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+        params: { deleteId: req.query.deleteId },
+      }
+    );
+
+    return res.render("allusers", {
+      allusers: allusers.data.data,
+      message: req.flash("message"),
+      Errmsg: req.flash("Errmsg"),
+    });
   } catch (error) {
-    return res.send(error);
+    return res.status(500).send({ message: "Internal Server Error" });
   }
 });
 
 router.get("/logout", async (req, res) => {
   try {
-    console.log("frontend logout");
-    return res.render("loginAdmin");
+    return res.render("loginAdmin", {
+      message: req.flash("message"),
+      Errmsg: req.flash("Errmsg"),
+    });
   } catch (error) {
-    return res.send(error);
+    return res.status(500).send({ message: "internal server error", error });
   }
 });
 

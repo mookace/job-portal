@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const adminController = require("../../controller/users/adminUserController");
 const middleware = require("../../middleware/middleware");
+const validation = require("../../controller/users/adminUserValidate");
 
 //New route
 router.post("/login", adminController.login);
@@ -10,6 +11,7 @@ router.post(
   "/postjob",
   middleware.authentication,
   middleware.authorizationForAdmin,
+  validation.JobSanitizer,
   adminController.postJobs
 );
 
@@ -18,13 +20,6 @@ router.get(
   middleware.authentication,
   middleware.authorizationForAdmin,
   adminController.allJobs
-);
-
-router.get(
-  "/logout",
-  middleware.authenticationForLogout,
-  middleware.authorizationForAdmin,
-  adminController.logout
 );
 
 router.post(
@@ -60,6 +55,34 @@ router.post(
   middleware.authentication,
   middleware.authorizationForAdmin,
   adminController.searchUser
+);
+
+router.get(
+  "/updateprofile",
+  middleware.authentication,
+  middleware.authorizationForAdmin,
+  adminController.updateProfile
+);
+
+router.post(
+  "/updateprofile",
+  middleware.authentication,
+  middleware.authorizationForAdmin,
+  adminController.updateProfile
+);
+
+router.get(
+  "/deleteprofile",
+  middleware.authentication,
+  middleware.authorizationForAdmin,
+  adminController.deleteProfile
+);
+
+router.get(
+  "/logout",
+  middleware.authenticationForLogout,
+  middleware.authorizationForAdmin,
+  adminController.logout
 );
 
 module.exports = router;
