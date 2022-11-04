@@ -116,7 +116,13 @@
             <td><%=user.fullname%></td>
             <td><%=user.role%></td>
             <td><%=user.is_active%></td>
-            <td><%=user.cv%></td>
+            <td>
+              <a
+                href="<%= 'http://localhost:8000/api/admin/downloadfile?id=' + user.id %>"
+              >
+                <%=user.cv%>
+              </a>
+            </td>
             <td><%=user.created_at%></td>
             <td><%=user.updated_at%></td>
             <td>

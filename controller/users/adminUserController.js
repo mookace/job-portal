@@ -1,9 +1,12 @@
-const adminController = {};
 const pool = require("../../dbconfig/dbconfig");
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
-const send_mail = require("../../middleware/email");
+const http = require("http");
+const path = require("path");
+const fs = require("fs");
 
+const send_mail = require("../../middleware/email");
+const adminController = {};
 // login
 adminController.login = async (req, res) => {
   try {
@@ -271,6 +274,45 @@ adminController.deleteProfile = async (req, res) => {
     }
 
     return res.redirect("/admin/deleteprofile?deleteId=" + deleteId);
+  } catch (error) {
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+};
+
+adminController.downloadFile = async (req, res) => {
+  try {
+    console.log("enter in download file");
+    const userid = req.query.id;
+    const cvName = await pool.query("select * from users where id=$1", [
+      userid,
+    ]);
+
+    const cvFileName = cvName.rows[0].cv;
+
+    const url = "http://localhost:8000/public/cv/" + cvFileName;
+
+    const filename = path.basename(url);
+
+    http
+      .get(url, (response) => {
+        const fileStream = fs.createWriteStream(filename);
+        response.pipe(fileStream);
+
+        fileStream.on("error", (err) => {
+          req.flash("Errmsg", "Failed to download Cv");
+          return res.status(400).redirect("../../admin/allusers");
+        });
+
+        fileStream.on("finish", () => {
+          fileStream.close();
+          req.flash("message", "Cv downloaded Successfully");
+          return res.status(200).redirect("../../admin/allusers");
+        });
+      })
+      .on("error", (err) => {
+        req.flash("Errmsg", "Cannot Read File");
+        return res.status(400).redirect("../../admin/allusers");
+      });
   } catch (error) {
     return res.status(500).send({ message: "Internal Server Error" });
   }

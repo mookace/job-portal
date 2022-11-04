@@ -79,6 +79,13 @@ router.get(
 );
 
 router.get(
+  "/downloadfile",
+  middleware.authentication,
+  middleware.authorizationForAdmin,
+  adminController.downloadFile
+);
+
+router.get(
   "/logout",
   middleware.authenticationForLogout,
   middleware.authorizationForAdmin,

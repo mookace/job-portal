@@ -112,8 +112,10 @@
               <tr>
                 <th scope="col">Job Applied By</th>
                 <th scope="col">Applied Date</th>
+                <th scope="col">Cv</th>
               </tr>
             </thead>
+            <%console.log('data',data)%>
             <tbody>
               <% if(data.length==0) {%>
               <h1 style="text-align: center; color: red">No Data Available</h1>
@@ -123,6 +125,13 @@
               <tr>
                 <td><%=e.email%></td>
                 <td><%=e.applied_at%></td>
+                <td>
+                  <a
+                    href="<%= 'http://localhost:8000/api/admin/downloadfile?id=' + e.user_id %>"
+                  >
+                    <%=e.cv%>
+                  </a>
+                </td>
               </tr>
               <%})%>
             </tbody>
