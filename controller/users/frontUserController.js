@@ -140,10 +140,6 @@ userController.singleUser = async (req, res) => {
         .send({ status: "success", userData: userDetails.rows[0] });
     }
     return res.status(200).redirect("/front/profile?userid=" + userid);
-
-    // return res.status(200).render("profile", { userData: userDetails.rows[0] });
-    // req.flash("message", "Profile Updated Successfully");
-    // return res.status(201).redirect("/front/homepage");
   } catch (error) {
     return res.status(500).send({ message: "internal server error", error });
   }
@@ -210,7 +206,7 @@ userController.searchResult = async (req, res) => {
   try {
     let job_title = req.query.job_title;
     job_title = "%" + job_title.toLowerCase() + "%";
-    console.log("job_title", job_title);
+
     const result = await pool.query(
       `select * from jobs where job_title LIKE $1 AND is_deleted='false' ORDER BY created_at DESC`,
       [job_title]
@@ -236,8 +232,7 @@ userController.searchApplyJob = async (req, res) => {
         "select job_title from jobs where id=$1",
         [jobId]
       );
-      console.log("searchapply job_title=", job_title.rows[0].job_title);
-      console.log("searchapply userid=", userData.id);
+
       req.flash("Errmsg", "Please update your profile");
       return res
         .status(400)
@@ -277,6 +272,56 @@ userController.searchApplyJob = async (req, res) => {
           "/api/user/searchjobs?job_title=" + jobDetails.rows[0].job_title
         );
     }
+  } catch (error) {
+    return res.status(500).send({ message: "internal server error", error });
+  }
+};
+
+userController.changaPassword = async (req, res) => {
+  try {
+    const userid = req.query.id;
+    const id = req.query.updateid;
+
+    const changaPassword = req.body;
+
+    if (changaPassword.confirmNewPassword && id) {
+      const findemail = await pool.query("select * from users where id=$1", [
+        id,
+      ]);
+      const data = findemail.rows[0];
+
+      const unhashPassword = CryptoJS.AES.decrypt(
+        data.password,
+        process.env.SECRET_KEY
+      );
+      const originalPassword = unhashPassword.toString(CryptoJS.enc.Utf8);
+      if (changaPassword.oldPassword === originalPassword) {
+        if (changaPassword.newPassword === changaPassword.confirmNewPassword) {
+          const passwordHashing = CryptoJS.AES.encrypt(
+            changaPassword.confirmNewPassword,
+            process.env.SECRET_KEY
+          ).toString();
+
+          await pool.query("update users set password=$1 where id=$2", [
+            passwordHashing,
+            id,
+          ]);
+
+          req.flash("message", "Password Change Successfully");
+          return res.status(400).redirect("/front/changePassword?userid=" + id);
+        } else {
+          req.flash(
+            "Errmsg",
+            "Confirm Password Does Not Match with New Password"
+          );
+          return res.status(400).redirect("/front/changePassword?userid=" + id);
+        }
+      } else {
+        req.flash("Errmsg", "Old Password Does Not Match");
+        return res.status(400).redirect("/front/changePassword?userid=" + id);
+      }
+    }
+    return res.status(200).redirect("/front/changePassword?userid=" + userid);
   } catch (error) {
     return res.status(500).send({ message: "internal server error", error });
   }

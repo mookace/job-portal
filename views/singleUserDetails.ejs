@@ -68,7 +68,11 @@
           </tr>
         </thead>
         <tbody>
-          <%console.log('data',data)%> <% data.forEach((user)=> { %>
+          <% if(data.length==0) {%>
+          <h1 style="text-align: center; color: red">No Data Available</h1>
+          <%}%>
+          <!-- Show Data -->
+          <% data.forEach((user)=> { %>
           <tr>
             <td><%=user.email%></td>
             <td><%=user.job_title%></td>

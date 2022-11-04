@@ -59,6 +59,10 @@
     <div class="container">
       <div class="row mt-5 mb-5">
         <div class="col-md-3">
+          <% if(alljobs.length==0) {%>
+          <h1 style="text-align: center; color: red">No Data Available</h1>
+          <%}%>
+          <!-- Show Data -->
           <% alljobs.forEach((job)=> { %>
           <div class="card">
             <div class="card-header">
@@ -111,7 +115,11 @@
               </tr>
             </thead>
             <tbody>
-              <%console.log('data55',data)%> <% data.forEach((e)=> { %>
+              <% if(data.length==0) {%>
+              <h1 style="text-align: center; color: red">No Data Available</h1>
+              <%}%>
+              <!-- Show Data -->
+              <% data.forEach((e)=> { %>
               <tr>
                 <td><%=e.email%></td>
                 <td><%=e.applied_at%></td>

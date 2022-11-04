@@ -257,11 +257,10 @@ adminController.updateProfile = async (req, res) => {
 adminController.deleteProfile = async (req, res) => {
   try {
     const deleteId = req.query.id;
-    console.log("deleteId", deleteId);
+
     const toDelete = req.query.deleteId;
-    console.log("todelete", toDelete);
+
     if (toDelete) {
-      console.log("Enter in todelete");
       const deleteUser = await pool.query(
         "update users set is_deleted='true',deleted_at=current_timestamp,is_active='false' where id=$1 returning *",
         [toDelete]
@@ -270,7 +269,7 @@ adminController.deleteProfile = async (req, res) => {
         .status(200)
         .send({ status: "success", data: deleteUser.rows[0] });
     }
-    console.log("enter in redirect");
+
     return res.redirect("/admin/deleteprofile?deleteId=" + deleteId);
   } catch (error) {
     return res.status(500).send({ message: "Internal Server Error" });

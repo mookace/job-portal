@@ -106,6 +106,10 @@
           </tr>
         </thead>
         <tbody>
+          <% if(allusers.length==0) {%>
+          <h1 style="text-align: center; color: red">No Data Available</h1>
+          <%}%>
+          <!-- Show Data -->
           <% allusers.forEach((user)=>{ %>
           <tr>
             <td><%=user.email%></td>

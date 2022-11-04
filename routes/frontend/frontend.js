@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const axios = require("axios");
+const { render } = require("ejs");
 
 router.get("/homepage", async (req, res) => {
   try {
@@ -106,6 +107,27 @@ router.get("/searchjobs", async (req, res) => {
       onlyjobid: onlyjobid,
       message: req.flash("message"),
       Errmsg: req.flash("Errmsg"),
+    });
+  } catch (error) {
+    return res.status(500).send({ message: "internal server error", error });
+  }
+});
+
+router.get("/changePassword", async (req, res) => {
+  try {
+    const token = req.cookies.accessToken;
+    const singleUser = await axios.get(
+      "http://localhost:8000/api/user/singleuser",
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+        params: { userid: req.query.userid },
+      }
+    );
+    return res.render("changePassword", {
+      userData: singleUser.data.userData,
+      Errmsg: req.flash("Errmsg"),
+      message: req.flash("message"),
     });
   } catch (error) {
     return res.status(500).send({ message: "internal server error", error });

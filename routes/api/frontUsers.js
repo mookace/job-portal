@@ -85,4 +85,20 @@ router.get(
   userController.searchResult
 );
 
+router.get(
+  "/changepassword",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  userController.changaPassword
+);
+
+router.post(
+  "/changepassword",
+  middleware.authentication,
+  middleware.authorizationForUser,
+  validation.ChangePasswordSanitizer,
+  validation.ChangePasswordValidate,
+  userController.changaPassword
+);
+
 module.exports = router;

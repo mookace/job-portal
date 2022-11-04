@@ -77,7 +77,11 @@
       <h1 class="mt-5 mb-5 text-center text-primary"><b>Search Jobs</b></h1>
 
       <div class="row mt-5 mb-5">
-        <% alljobs.forEach((job)=> { %>
+        <% if(alljobs.length==0) {%>
+        <h1 style="text-align: center; color: red">No Data Available</h1>
+        <%}%>
+        <!-- Show Data -->
+        <% alljobs.forEach((job)=> {%>
         <div class="col-md-4 mb-5">
           <div class="card">
             <div class="card-header">
