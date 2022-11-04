@@ -88,6 +88,8 @@ router.get("/jobdetails", async (req, res) => {
     return res.render("jobDetails", {
       data: all.data.data,
       alljobs: all.data.alljobs,
+      Errmsg: req.flash("Errmsg"),
+      message: req.flash("message"),
     });
   } catch (error) {
     return res.status(500).send({ message: "Internal Server Error" });
@@ -159,7 +161,7 @@ router.get("/deleteprofile", async (req, res) => {
         withCredentials: true,
       }
     );
-    console.log("alluserssssss");
+
     const deleteuser = await axios.get(
       "http://localhost:8000/api/admin/deleteprofile",
       {
@@ -168,7 +170,7 @@ router.get("/deleteprofile", async (req, res) => {
         params: { deleteId: req.query.deleteId },
       }
     );
-    console.log("deleteusers", deleteuser.data.data);
+
     if (deleteuser.data.data) {
       req.flash("message", "User Deleted Successfully");
     } else {

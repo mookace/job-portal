@@ -74,9 +74,8 @@ router.get("/profile", async (req, res) => {
 router.get("/searchjobs", async (req, res) => {
   try {
     const job_title = req.query.job_title;
-    console.log("job_title", job_title);
+
     const userid = req.query.userid;
-    console.log("usrid,use", userid);
 
     const token = req.cookies.accessToken;
     const result = await axios.get(
@@ -88,15 +87,11 @@ router.get("/searchjobs", async (req, res) => {
       }
     );
 
-    console.log("results", result.data);
-
     const apply = await axios.get("http://localhost:8000/api/user/jobid", {
       headers: { Authorization: "Bearer " + token },
       withCredentials: true,
       params: { userid: userid },
     });
-
-    console.log("apply", apply.data);
 
     const alljobid = apply.data.data;
     const onlyjobid = alljobid.map((e) => e.job_id);

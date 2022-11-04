@@ -281,8 +281,9 @@ adminController.deleteProfile = async (req, res) => {
 
 adminController.downloadFile = async (req, res) => {
   try {
-    console.log("enter in download file");
     const userid = req.query.id;
+    const jobId = req.query.jobId;
+
     const cvName = await pool.query("select * from users where id=$1", [
       userid,
     ]);
@@ -299,17 +300,35 @@ adminController.downloadFile = async (req, res) => {
         response.pipe(fileStream);
 
         fileStream.on("error", (err) => {
+          if (jobId) {
+            req.flash("Errmsg", "Failed to download Cv");
+            return res
+              .status(400)
+              .redirect("../../admin/jobdetails?jobId=" + jobId);
+          }
           req.flash("Errmsg", "Failed to download Cv");
           return res.status(400).redirect("../../admin/allusers");
         });
 
         fileStream.on("finish", () => {
           fileStream.close();
+          if (jobId) {
+            req.flash("message", "Cv downloaded Successfully");
+            return res
+              .status(200)
+              .redirect("../../admin/jobdetails?jobId=" + jobId);
+          }
           req.flash("message", "Cv downloaded Successfully");
           return res.status(200).redirect("../../admin/allusers");
         });
       })
       .on("error", (err) => {
+        if (jobId) {
+          req.flash("Errmsg", "Cannot Read File");
+          return res
+            .status(400)
+            .redirect("../../admin/jobdetails?jobId=" + jobId);
+        }
         req.flash("Errmsg", "Cannot Read File");
         return res.status(400).redirect("../../admin/allusers");
       });

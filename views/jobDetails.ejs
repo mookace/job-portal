@@ -55,6 +55,22 @@
       </div>
     </nav>
 
+    <!-- Alert message -->
+    <% if(Errmsg.length>0){%>
+    <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong><%=Errmsg%></strong>
+    </div>
+    <%}%>
+
+    <!-- Success message -->
+    <% if(message.length>0){%>
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong><%=message%></strong>
+    </div>
+    <%}%>
+
     <!-- New All Data -->
     <div class="container">
       <div class="row mt-5 mb-5">
@@ -127,7 +143,7 @@
                 <td><%=e.applied_at%></td>
                 <td>
                   <a
-                    href="<%= 'http://localhost:8000/api/admin/downloadfile?id=' + e.user_id %>"
+                    href="<%= 'http://localhost:8000/api/admin/downloadfile?id=' + e.user_id +'&jobId='+e.job_id %>"
                   >
                     <%=e.cv%>
                   </a>
