@@ -64,7 +64,7 @@
                 class="nav-link active"
                 aria-current="page"
                 href="http://localhost:8000/api/admin/logout"
-                >Logut</a
+                >Logout</a
               >
             </li>
           </ul>
@@ -72,26 +72,47 @@
       </div>
     </nav>
 
+    <!-- Alert message -->
+    <% if(Errmsg.length>0){%>
+    <div class="alert alert-danger alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong><%=Errmsg%></strong>
+    </div>
+    <%}%>
+
+    <!-- Success message -->
+    <% if(message.length>0){%>
+    <div class="alert alert-success alert-dismissible">
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <strong><%=message%></strong>
+    </div>
+    <%}%>
+
     <!-- All Data -->
     <div class="container mt-5 mb-5">
       <table class="table">
         <thead class="table-dark">
           <tr>
             <th scope="col">Email</th>
+            <th scope="col">Fullname</th>
             <th scope="col">Role</th>
             <th scope="col">Active</th>
+            <th scope="col">CV</th>
             <th scope="col">Created Date</th>
             <th scope="col">Update Date</th>
             <th scope="col">View Details</th>
-            <th scope="col">Edit/Delete</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
           </tr>
         </thead>
         <tbody>
           <% allusers.forEach((user)=>{ %>
           <tr>
             <td><%=user.email%></td>
+            <td><%=user.fullname%></td>
             <td><%=user.role%></td>
             <td><%=user.is_active%></td>
+            <td><%=user.cv%></td>
             <td><%=user.created_at%></td>
             <td><%=user.updated_at%></td>
             <td>
@@ -102,29 +123,21 @@
                 View Details
               </a>
             </td>
-            <td
-              style="
-                display: flex;
-                justify-content: space-around;
-                align-item: center;
-              "
-            >
-              <div>
-                <a
-                  href="<%= 'http://localhost:8000/api/admin/updateprofile?id=' + user.id %>"
-                  class="link-primary"
-                >
-                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                </a>
-              </div>
-              <div>
-                <a
-                  href="<%= 'http://localhost:8000/api/admin/deleteprofile?id=' + user.id %>"
-                  class="link-danger"
-                >
-                  <i class="fa fa-trash" aria-hidden="true"></i>
-                </a>
-              </div>
+            <td>
+              <a
+                href="<%= 'http://localhost:8000/api/admin/updateprofile?id=' + user.id %>"
+                class="btn btn-info"
+              >
+                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+              </a>
+            </td>
+            <td>
+              <a
+                href="<%= 'http://localhost:8000/api/admin/deleteprofile?id=' + user.id %>"
+                class="btn btn-danger"
+              >
+                <i class="fa fa-trash" aria-hidden="true"></i>
+              </a>
             </td>
           </tr>
           <%})%>
