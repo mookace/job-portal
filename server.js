@@ -43,12 +43,21 @@ pool
   .catch((err) => console.log("Database Connected Failed", err));
 
 // Use API Routes
+
 app.use("/api", routes); //api routes
 app.use("/public", express.static(path.join(__dirname, "public")));
 
 // Frontend Routes
 app.use("/front", front); //client route
 app.use("/admin", admin); //admin route
+
+app.get("/", async (req, res) => {
+  try {
+    return res.redirect("/front/login");
+  } catch (error) {
+    return res.status(500).send({ message: "Internal Server Error" });
+  }
+});
 
 app.listen(PORT, (res, err) => {
   if (!err) {
