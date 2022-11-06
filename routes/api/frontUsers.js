@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 const userController = require("../../controller/users/frontUserController");
 const middleware = require("../../middleware/middleware");
 const validation = require("../../controller/users/frontUserValidate");
+
+require("../../middleware/loginOption");
 
 router.post(
   "/register",
@@ -99,6 +102,19 @@ router.post(
   validation.ChangePasswordSanitizer,
   validation.ChangePasswordValidate,
   userController.changaPassword
+);
+
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
+);
+
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    successRedirect: "/",
+    failureRedirect: "/auth/google/failure",
+  })
 );
 
 module.exports = router;

@@ -35,6 +35,14 @@ router.get("/homepage", async (req, res) => {
   }
 });
 
+router.get("/googlelogin", async (req, res) => {
+  try {
+    console.log("uuuuserid", req.query.id);
+  } catch (error) {
+    return res.status(500).send({ message: "internal server error", error });
+  }
+});
+
 router.get("/login", async (req, res) => {
   try {
     return res.render("login", {
