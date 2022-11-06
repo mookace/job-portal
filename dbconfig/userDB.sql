@@ -3,7 +3,8 @@
 CREATE TABLE users(
 id SERIAL PRIMARY KEY NOT NULL,
 email TEXT NOT NULL,
-password TEXT NOT NULL,
+google_id TEXT,
+password TEXT,
 role text default('users') not null,
 is_active boolean default('false'),
 fullname TEXT ,
