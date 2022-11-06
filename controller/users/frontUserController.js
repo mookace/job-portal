@@ -82,6 +82,15 @@ userController.login = async (req, res) => {
   }
 };
 
+userController.googleLogin = async (req, res) => {
+  try {
+    const googleUser = req.session.passport.user;
+    console.log("googleUser", googleUser);
+  } catch (error) {
+    return res.status(500).send({ message: "internal server error", error });
+  }
+};
+
 userController.allJobs = async (req, res) => {
   try {
     const userid = req.user.id;
