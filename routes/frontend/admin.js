@@ -170,9 +170,14 @@ router.get("/deleteprofile", async (req, res) => {
         params: { deleteId: req.query.deleteId },
       }
     );
+    console.log("deleteuser.data.data.status", deleteuser.data.status);
 
     if (deleteuser.data.data) {
-      req.flash("message", "User Deleted Successfully");
+      if (deleteuser.data.status === "Fail") {
+        req.flash("Errmsg", "Super Admin Cannot be Deleted");
+      } else {
+        req.flash("message", "User Deleted Successfully");
+      }
     } else {
       req.flash("Errmsg", "Failed To Delete User");
     }

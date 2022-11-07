@@ -148,7 +148,7 @@ adminController.jobDetails = async (req, res) => {
     }
     if (jobidjob) {
       const allUserWithJobId = await pool.query(
-        "select * from users inner join jobapplied on users.id=jobapplied.user_id where jobapplied.job_id=$1",
+        "select * from users inner join jobapplied on users.id=jobapplied.user_id where jobapplied.job_id=$1 and users.is_deleted='false'",
         [jobidjob]
       );
 
@@ -274,14 +274,29 @@ adminController.updateProfile = async (req, res) => {
 adminController.deleteProfile = async (req, res) => {
   try {
     const deleteId = req.query.id;
-
     const toDelete = req.query.deleteId;
 
     if (toDelete) {
+      const checkSuperAdmin = await pool.query(
+        "select * from users where id=$1",
+        [toDelete]
+      );
+      console.log("superadmin", checkSuperAdmin.rows[0].email);
+      if (checkSuperAdmin.rows[0].email == "rajbanshimukesh999@gmail.com") {
+        return res
+          .status(200)
+          .send({ status: "Fail", data: checkSuperAdmin.rows[0].email });
+      }
+
       const deleteUser = await pool.query(
         "update users set is_deleted='true',deleted_at=current_timestamp,is_active='false' where id=$1 returning *",
         [toDelete]
       );
+      await pool.query(
+        "update jobapplied set is_deleted='true',deleted_at=current_timestamp where user_id=$1 returning *",
+        [toDelete]
+      );
+
       return res
         .status(200)
         .send({ status: "success", data: deleteUser.rows[0] });
