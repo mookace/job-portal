@@ -2,7 +2,7 @@ const userController = {};
 const pool = require("../../dbconfig/dbconfig");
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
-const send_mail = require("../../middleware/email");
+const sendmail = require("../../middleware/email");
 
 userController.registerUser = async (req, res) => {
   try {
@@ -206,14 +206,23 @@ userController.applyJob = async (req, res) => {
         jobId,
       ]);
 
+      // send email to admin
       await allAdminEmail.forEach((email) =>
-        send_mail(
+        sendmail.send_mail(
           userData.email,
           email,
           jobDetails.rows[0].job_title,
           jobDetails.rows[0].company_name
         )
       );
+
+      // send email to User
+      await sendmail.user_mail(
+        userData.email,
+        jobDetails.rows[0].job_title,
+        jobDetails.rows[0].company_name
+      );
+
       req.flash("message", "Job applied successfully");
       return res.status(200).redirect("/front/homepage");
     }
@@ -290,15 +299,22 @@ userController.searchApplyJob = async (req, res) => {
       const jobDetails = await pool.query("select * from jobs where id=$1", [
         jobId,
       ]);
-
+      // send email to admin
       await allAdminEmail.forEach((email) =>
-        send_mail(
+        sendmail.send_mail(
           userData.email,
           email,
           jobDetails.rows[0].job_title,
           jobDetails.rows[0].company_name
         )
       );
+      // send email to user
+      await sendmail.user_mail(
+        userData.email,
+        jobDetails.rows[0].job_title,
+        jobDetails.rows[0].company_name
+      );
+
       req.flash("message", "Job applied successfully");
       return res
         .status(201)
