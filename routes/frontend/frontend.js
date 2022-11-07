@@ -9,12 +9,15 @@ router.get("/homepage", async (req, res) => {
     if (!token) {
       return res.status(401).send({ message: "No Token available" });
     }
-    const alljobs = await axios.get(`${process.env.PORT}/api/user/getalljobs`, {
-      headers: { Authorization: "Bearer " + token },
-      withCredentials: true,
-    });
+    const alljobs = await axios.get(
+      "http://localhost:8000/api/user/getalljobs",
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+      }
+    );
 
-    const apply = await axios.get(`${process.env.PORT}/api/user/jobid`, {
+    const apply = await axios.get("http://localhost:8000/api/user/jobid", {
       headers: { Authorization: "Bearer " + token },
       withCredentials: true,
       params: { userid: alljobs.data.userid },
