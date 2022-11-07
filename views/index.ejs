@@ -40,7 +40,7 @@
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="<%= 'http://localhost:8000/api/user/singleuser?id=' + userid %>"
+                href="<%= '/api/user/singleuser?id=' + userid %>"
                 >Update Profile</a
               >
             </li>
@@ -50,7 +50,7 @@
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="http://localhost:8000/api/user/logout"
+                href="/api/user/logout"
                 >Logout</a
               >
             </li>
@@ -131,7 +131,7 @@
                 >
                   <% if(!onlyjobid.includes(job.id)){ %>
                   <a
-                    href="<%= 'http://localhost:8000/api/user/sendemail?id=' + job.id %>"
+                    href="<%= '/api/user/sendemail?id=' + job.id %>"
                     class="btn btn-success"
                     >Apply</a
                   >

@@ -46,7 +46,7 @@
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="http://localhost:8000/api/admin/logout"
+                href="/api/admin/logout"
                 >Logout</a
               >
             </li>
@@ -120,7 +120,7 @@
             </div>
             <div class="card-footer">
               <a
-                href="<%= 'http://localhost:8000/api/admin/deletejob?id=' + job.id %>"
+                href="<%= '/api/admin/deletejob?id=' + job.id %>"
                 class="btn btn-danger"
                 >Delete Job</a
               >
@@ -149,7 +149,7 @@
                 <td><%=e.applied_at%></td>
                 <td>
                   <a
-                    href="<%= 'http://localhost:8000/api/admin/downloadfile?id=' + e.user_id +'&jobId='+e.job_id %>"
+                    href="<%= '/api/admin/downloadfile?id=' + e.user_id +'&jobId='+e.job_id %>"
                   >
                     <%=e.cv%>
                   </a>

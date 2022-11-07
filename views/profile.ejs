@@ -31,7 +31,7 @@
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="http://localhost:8000/api/user/logout"
+                href="/api/user/logout"
                 >Logout</a
               >
             </li>
@@ -103,7 +103,7 @@
             <div class="card-footer">
               <h2>
                 <a
-                  href="<%= 'http://localhost:8000/api/user/changepassword?id=' + userData.id %>"
+                  href="<%= '/api/user/changepassword?id=' + userData.id %>"
                   class="btn btn-success"
                 >
                   Change Password

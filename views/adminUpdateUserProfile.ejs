@@ -46,7 +46,7 @@
               <a
                 class="nav-link active"
                 aria-current="page"
-                href="http://localhost:8000/api/admin/logout"
+                href="/api/admin/logout"
                 >Logut</a
               >
             </li>
@@ -80,7 +80,7 @@
             <div class="card-header">Profile Update</div>
             <div class="card-body">
               <form
-                action="<%= 'http://localhost:8000/api/admin/updateprofile?updateid=' + userData.id %>"
+                action="<%= '/api/admin/updateprofile?updateid=' + userData.id %>"
                 method="post"
               >
                 <div class="mb-3">
