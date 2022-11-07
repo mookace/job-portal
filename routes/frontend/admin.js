@@ -9,10 +9,13 @@ router.get("/alljobs", async (req, res) => {
     if (!token) {
       return res.status(401).send({ message: "No Token available" });
     }
-    const alljobs = await axios.get(`/api/admin/getalljobs`, {
-      headers: { Authorization: "Bearer " + token },
-      withCredentials: true,
-    });
+    const alljobs = await axios.get(
+      `http://localhost:${process.env.PORT || 8000}/api/admin/getalljobs`,
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+      }
+    );
     return res.render("alljobs", {
       alljobs: alljobs.data.data,
       message: req.flash("message"),
