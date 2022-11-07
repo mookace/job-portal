@@ -112,6 +112,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
+<<<<<<< HEAD
     successRedirect: "/api/user/googlelogin",
     failureRedirect: "/api/user/googlelogin",
   })
@@ -119,4 +120,11 @@ router.get(
 
 router.get("/googlelogin", userController.googleLogin);
 
+=======
+    successRedirect: "/",
+    failureRedirect: "/auth/google/failure",
+  })
+);
+
+>>>>>>> e1f401d67468604e21d38e3c7a9d111fb15d3aed
 module.exports = router;
