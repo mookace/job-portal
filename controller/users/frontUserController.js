@@ -40,9 +40,10 @@ userController.login = async (req, res) => {
     let { email, password } = req.body;
 
     email = email.toLowerCase();
-    const findemail = await pool.query("select * from users where email=$1", [
-      email,
-    ]);
+    const findemail = await pool.query(
+      "select * from users where email=$1 and is_deleted='false'",
+      [email]
+    );
     const data = findemail.rows[0];
 
     if (data) {
@@ -85,7 +86,6 @@ userController.login = async (req, res) => {
 userController.googleLogin = async (req, res) => {
   try {
     const googleUser = req.session.passport.user;
-    console.log("googleUser", googleUser);
     if (googleUser) {
       const user = {
         id: googleUser.id,
@@ -163,9 +163,10 @@ userController.singleUser = async (req, res) => {
     const userid = req.query.id;
     const newUserId = req.query.userid;
     if (newUserId) {
-      const userDetails = await pool.query("select * from users where id=$1", [
-        newUserId,
-      ]);
+      const userDetails = await pool.query(
+        "select * from users where id=$1 and is_deleted='false'",
+        [newUserId]
+      );
       return res
         .status(200)
         .send({ status: "success", userData: userDetails.rows[0] });
@@ -180,9 +181,10 @@ userController.applyJob = async (req, res) => {
   try {
     const userData = req.user;
     const jobId = req.query.id;
-    let checkCV = await pool.query("select cv from users where email=$1", [
-      userData.email,
-    ]);
+    let checkCV = await pool.query(
+      "select cv from users where email=$1 and is_deleted='false'",
+      [userData.email]
+    );
     const data = checkCV.rows;
     const newData = data.map((e) => e.cv);
 
@@ -224,7 +226,7 @@ userController.getJobIdFromJobapplied = async (req, res) => {
   try {
     const userid = req.query.userid;
     const apply = await pool.query(
-      "select job_id from jobapplied where user_id=$1",
+      "select job_id from jobapplied where user_id=$1 and is_deleted='false'",
       [userid]
     );
     return res.status(200).send({ status: "success", data: apply.rows });
@@ -252,15 +254,16 @@ userController.searchApplyJob = async (req, res) => {
   try {
     const userData = req.user;
     const jobId = req.query.id;
-    let checkCV = await pool.query("select cv from users where email=$1", [
-      userData.email,
-    ]);
+    let checkCV = await pool.query(
+      "select cv from users where email=$1 AND is_deleted='false'",
+      [userData.email]
+    );
     const data = checkCV.rows;
     const newData = data.map((e) => e.cv);
 
     if (newData[0] == null) {
       const job_title = await pool.query(
-        "select job_title from jobs where id=$1",
+        "select job_title from jobs where id=$1 AND is_deleted='false'",
         [jobId]
       );
 
@@ -316,9 +319,10 @@ userController.changaPassword = async (req, res) => {
     const changaPassword = req.body;
 
     if (changaPassword.confirmNewPassword && id) {
-      const findemail = await pool.query("select * from users where id=$1", [
-        id,
-      ]);
+      const findemail = await pool.query(
+        "select * from users where id=$1 AND is_deleted='false'",
+        [id]
+      );
       const data = findemail.rows[0];
 
       const unhashPassword = CryptoJS.AES.decrypt(
