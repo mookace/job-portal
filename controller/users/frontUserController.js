@@ -86,6 +86,28 @@ userController.googleLogin = async (req, res) => {
   try {
     const googleUser = req.session.passport.user;
     console.log("googleUser", googleUser);
+    if (googleUser) {
+      const user = {
+        id: googleUser.id,
+        email: googleUser.email,
+        role: googleUser.role,
+      };
+      const accessToken = jwt.sign(user, process.env.JWT_SEC, {
+        expiresIn: "12h",
+      });
+
+      res.cookie("accessToken", accessToken, {
+        maxAge: 1000 * 60 * 60 * 12,
+        httpOnly: true,
+      });
+      console.log("accesstoken", accessToken);
+
+      req.flash("message", "Successfully Login");
+      return res.status(200).redirect("/front/homepage");
+    } else {
+      req.flash("Errmsg", "Error in google Login");
+      return res.status(400).redirect("/front/login");
+    }
   } catch (error) {
     return res.status(500).send({ message: "internal server error", error });
   }

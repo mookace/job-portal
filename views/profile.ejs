@@ -56,6 +56,19 @@
               >
                 <%if(userData){%>
                 <div class="mb-3">
+                  <label for="text">Email</label>
+                  <input
+                    type="text"
+                    name="email"
+                    class="form-control"
+                    value="<%=userData.email%>"
+                    readonly
+                  />
+                </div>
+                <%}%>
+                <!-- Form Data -->
+                <%if(userData){%>
+                <div class="mb-3">
                   <label for="text">Fullname</label>
                   <input
                     type="text"
@@ -88,11 +101,14 @@
               </form>
             </div>
             <div class="card-footer">
-              <a
-                href="<%= 'http://localhost:8000/api/user/changepassword?id=' + userData.id %>"
-              >
-                Change Password
-              </a>
+              <h2>
+                <a
+                  href="<%= 'http://localhost:8000/api/user/changepassword?id=' + userData.id %>"
+                  class="btn btn-success"
+                >
+                  Change Password
+                </a>
+              </h2>
             </div>
           </div>
         </div>
