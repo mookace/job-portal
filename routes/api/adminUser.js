@@ -37,6 +37,13 @@ router.get(
 );
 
 router.get(
+  "/deletejob",
+  middleware.authentication,
+  middleware.authorizationForAdmin,
+  adminController.deleteJob
+);
+
+router.get(
   "/allusers",
   middleware.authentication,
   middleware.authorizationForAdmin,

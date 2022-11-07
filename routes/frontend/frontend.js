@@ -6,6 +6,9 @@ const { render } = require("ejs");
 router.get("/homepage", async (req, res) => {
   try {
     const token = req.cookies.accessToken;
+    if (!token) {
+      return res.status(401).send({ message: "No Token available" });
+    }
     const alljobs = await axios.get(
       "http://localhost:8000/api/user/getalljobs",
       {
@@ -35,14 +38,6 @@ router.get("/homepage", async (req, res) => {
   }
 });
 
-router.get("/googlelogin", async (req, res) => {
-  try {
-    console.log("uuuuserid", req.query.id);
-  } catch (error) {
-    return res.status(500).send({ message: "internal server error", error });
-  }
-});
-
 router.get("/login", async (req, res) => {
   try {
     return res.render("login", {
@@ -65,6 +60,9 @@ router.get("/register", async (req, res) => {
 router.get("/profile", async (req, res) => {
   try {
     const token = req.cookies.accessToken;
+    if (!token) {
+      return res.status(401).send({ message: "No Token available" });
+    }
     const singleUser = await axios.get(
       "http://localhost:8000/api/user/singleuser",
       {
@@ -86,6 +84,9 @@ router.get("/searchjobs", async (req, res) => {
     const userid = req.query.userid;
 
     const token = req.cookies.accessToken;
+    if (!token) {
+      return res.status(401).send({ message: "No Token available" });
+    }
     const result = await axios.get(
       "http://localhost:8000/api/user/searchresult",
       {
@@ -119,6 +120,9 @@ router.get("/searchjobs", async (req, res) => {
 router.get("/changePassword", async (req, res) => {
   try {
     const token = req.cookies.accessToken;
+    if (!token) {
+      return res.status(401).send({ message: "No Token available" });
+    }
     const singleUser = await axios.get(
       "http://localhost:8000/api/user/singleuser",
       {

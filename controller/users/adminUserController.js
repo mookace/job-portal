@@ -164,7 +164,21 @@ adminController.jobDetails = async (req, res) => {
       });
     }
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ message: "internal server error" });
+  }
+};
+
+adminController.deleteJob = async (req, res) => {
+  try {
+    const jobId = req.query.id;
+    console.log("jobid", jobId);
+
+    //     DELETE messages , usersmessages  FROM messages  INNER JOIN usersmessages
+    // WHERE messages.messageid= usersmessages.messageid and messages.messageid = '1'
+
+    // const delete=await pool.query("delete from jobs inner join jobapplied on jobs.id=jobapplied.job_id")
+  } catch (error) {
+    return res.status(500).send({ message: "internal server error" });
   }
 };
 
