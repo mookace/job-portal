@@ -67,7 +67,7 @@ router.get("/profile", async (req, res) => {
       return res.status(401).send({ message: "No Token available" });
     }
     const singleUser = await axios.get(
-      "http://localhost:8000/api/user/singleuser",
+      `http://localhost:${process.env.PORT}/api/user/singleuser`,
       {
         headers: { Authorization: "Bearer " + token },
         withCredentials: true,
@@ -91,7 +91,7 @@ router.get("/searchjobs", async (req, res) => {
       return res.status(401).send({ message: "No Token available" });
     }
     const result = await axios.get(
-      "http://localhost:8000/api/user/searchresult",
+      `http://localhost:${process.env.PORT}/api/user/searchresult`,
       {
         headers: { Authorization: "Bearer " + token },
         withCredentials: true,
@@ -99,11 +99,14 @@ router.get("/searchjobs", async (req, res) => {
       }
     );
 
-    const apply = await axios.get("http://localhost:8000/api/user/jobid", {
-      headers: { Authorization: "Bearer " + token },
-      withCredentials: true,
-      params: { userid: userid },
-    });
+    const apply = await axios.get(
+      `http://localhost:${process.env.PORT}/api/user/jobid`,
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+        params: { userid: userid },
+      }
+    );
 
     const alljobid = apply.data.data;
     const onlyjobid = alljobid.map((e) => e.job_id);
@@ -127,7 +130,7 @@ router.get("/changePassword", async (req, res) => {
       return res.status(401).send({ message: "No Token available" });
     }
     const singleUser = await axios.get(
-      "http://localhost:8000/api/user/singleuser",
+      `http://localhost:${process.env.PORT}/api/user/singleuser`,
       {
         headers: { Authorization: "Bearer " + token },
         withCredentials: true,
