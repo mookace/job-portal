@@ -10,7 +10,7 @@ router.get("/alljobs", async (req, res) => {
       return res.status(401).send({ message: "No Token available" });
     }
     const alljobs = await axios.get(
-      "http://localhost:8000/api/admin/getalljobs",
+      `http://localhost:${process.env.PORT}/api/admin/getalljobs`,
       {
         headers: { Authorization: "Bearer " + token },
         withCredentials: true,
@@ -33,7 +33,7 @@ router.get("/searchjobs", async (req, res) => {
       return res.status(401).send({ message: "No Token available" });
     }
     const alljobs = await axios.get(
-      "http://localhost:8000/api/admin/getalljobs",
+      `http://localhost:${process.env.PORT}/api/admin/getalljobs`,
       {
         headers: { Authorization: "Bearer " + token },
         withCredentials: true,
@@ -79,11 +79,14 @@ router.get("/jobdetails", async (req, res) => {
     if (!token) {
       return res.status(401).send({ message: "No Token available" });
     }
-    const all = await axios.get("http://localhost:8000/api/admin/jobdetails", {
-      headers: { Authorization: "Bearer " + token },
-      withCredentials: true,
-      params: { jobidjob: req.query.jobId },
-    });
+    const all = await axios.get(
+      `http://localhost:${process.env.PORT}/api/admin/jobdetails`,
+      {
+        headers: { Authorization: "Bearer " + token },
+        withCredentials: true,
+        params: { jobidjob: req.query.jobId },
+      }
+    );
 
     return res.render("jobDetails", {
       data: all.data.data,
@@ -103,7 +106,7 @@ router.get("/allusers", async (req, res) => {
       return res.send({ message: "No Token available" });
     }
     const allusers = await axios.get(
-      "http://localhost:8000/api/admin/allusers",
+      `http://localhost:${process.env.PORT}/api/admin/allusers`,
       {
         headers: { Authorization: "Bearer " + token },
         withCredentials: true,
@@ -127,7 +130,7 @@ router.get("/userdetails", async (req, res) => {
       return res.send({ message: "No Token available" });
     }
     const allusers = await axios.get(
-      "http://localhost:8000/api/admin/userdetails",
+      `http://localhost:${process.env.PORT}/api/admin/userdetails`,
       {
         headers: { Authorization: "Bearer " + token },
         withCredentials: true,
@@ -155,7 +158,7 @@ router.get("/deleteprofile", async (req, res) => {
       return res.send({ message: "No Token available" });
     }
     const allusers = await axios.get(
-      "http://localhost:8000/api/admin/allusers",
+      `http://localhost:${process.env.PORT}/api/admin/allusers`,
       {
         headers: { Authorization: "Bearer " + token },
         withCredentials: true,
@@ -163,7 +166,7 @@ router.get("/deleteprofile", async (req, res) => {
     );
 
     const deleteuser = await axios.get(
-      "http://localhost:8000/api/admin/deleteprofile",
+      `http://localhost:${process.env.PORT}/api/admin/deleteprofile`,
       {
         headers: { Authorization: "Bearer " + token },
         withCredentials: true,

@@ -36,7 +36,6 @@ adminController.login = async (req, res) => {
 
         res.cookie("accessToken", accessToken, {
           maxAge: 1000 * 60 * 60 * 12,
-          httpOnly: true,
         });
         req.flash("message", "Successfully Login");
         return res.status(200).redirect("/admin/homepage");
@@ -320,7 +319,7 @@ adminController.downloadFile = async (req, res) => {
 
     const cvFileName = cvName.rows[0].cv;
 
-    const url = "http://localhost:8000/public/cv/" + cvFileName;
+    const url = `http://localhost:${process.env.PORT}/public/cv/` + cvFileName;
 
     const filename = path.basename(url);
 
