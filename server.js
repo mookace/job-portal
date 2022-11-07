@@ -13,7 +13,7 @@ const routes = require("./routes/index");
 const front = require("./routes/frontend/frontend");
 const admin = require("./routes/frontend/admin");
 
-const PORT = process.env.SERVERPORT || 8085;
+const PORT = process.env.PORT || 8000;
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
