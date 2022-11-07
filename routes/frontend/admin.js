@@ -17,7 +17,7 @@ router.get("/alljobs", async (req, res) => {
       }
     );
     console.log("alljobs", alljobs.data);
-    return res.render("alljobs", {
+    return res.render("allJobs", {
       alljobs: alljobs.data.data,
       message: req.flash("message"),
       Errmsg: req.flash("Errmsg"),

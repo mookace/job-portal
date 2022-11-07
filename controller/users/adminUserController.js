@@ -216,9 +216,6 @@ adminController.searchByjobTitle = async (req, res) => {
       [job_title]
     );
     return res.status(200).redirect("/admin/searchjobs?job_title=" + job_title);
-    // return res.render("allJobs", {
-    //   alljobs: result.rows,
-    // });
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -230,7 +227,6 @@ adminController.searchUser = async (req, res) => {
     userEmail = userEmail.toLowerCase();
 
     return res.status(200).redirect("/admin/allusers?email=" + userEmail);
-    // return res.render("allusers", { allusers: result.rows });
   } catch (error) {
     return res.status(500).send(error);
   }
