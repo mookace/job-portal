@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const flash = require("connect-flash");
 require("dotenv").config();
+const axios = require("axios");
 
 const logger = require("morgan");
 
@@ -58,6 +59,8 @@ app.get("/", async (req, res) => {
     return res.status(500).send({ message: "Internal Server Error" });
   }
 });
+
+axios.defaults.baseURL = `http://localhost:${PORT}`;
 
 app.listen(PORT, (res, err) => {
   if (!err) {

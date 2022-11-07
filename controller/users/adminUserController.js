@@ -319,7 +319,8 @@ adminController.downloadFile = async (req, res) => {
 
     const cvFileName = cvName.rows[0].cv;
 
-    const url = `http://localhost:${process.env.PORT}/public/cv/` + cvFileName;
+    const url =
+      `http://localhost:${process.env.PORT || 8000}/public/cv/` + cvFileName;
 
     const filename = path.basename(url);
 

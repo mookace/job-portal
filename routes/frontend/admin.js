@@ -9,13 +9,10 @@ router.get("/alljobs", async (req, res) => {
     if (!token) {
       return res.status(401).send({ message: "No Token available" });
     }
-    const alljobs = await axios.get(
-      `http://localhost:${process.env.PORT}/api/admin/getalljobs`,
-      {
-        headers: { Authorization: "Bearer " + token },
-        withCredentials: true,
-      }
-    );
+    const alljobs = await axios.get(`/api/admin/getalljobs`, {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+    });
     return res.render("alljobs", {
       alljobs: alljobs.data.data,
       message: req.flash("message"),
@@ -32,14 +29,11 @@ router.get("/searchjobs", async (req, res) => {
     if (!token) {
       return res.status(401).send({ message: "No Token available" });
     }
-    const alljobs = await axios.get(
-      `http://localhost:${process.env.PORT}/api/admin/getalljobs`,
-      {
-        headers: { Authorization: "Bearer " + token },
-        withCredentials: true,
-        params: { job_title: req.query.job_title },
-      }
-    );
+    const alljobs = await axios.get(`/api/admin/getalljobs`, {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+      params: { job_title: req.query.job_title },
+    });
 
     return res.render("searchAllJobsAdmin", {
       alljobs: alljobs.data.data,
@@ -79,14 +73,11 @@ router.get("/jobdetails", async (req, res) => {
     if (!token) {
       return res.status(401).send({ message: "No Token available" });
     }
-    const all = await axios.get(
-      `http://localhost:${process.env.PORT}/api/admin/jobdetails`,
-      {
-        headers: { Authorization: "Bearer " + token },
-        withCredentials: true,
-        params: { jobidjob: req.query.jobId },
-      }
-    );
+    const all = await axios.get(`/api/admin/jobdetails`, {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+      params: { jobidjob: req.query.jobId },
+    });
 
     return res.render("jobDetails", {
       data: all.data.data,
@@ -105,14 +96,11 @@ router.get("/allusers", async (req, res) => {
     if (!token) {
       return res.send({ message: "No Token available" });
     }
-    const allusers = await axios.get(
-      `http://localhost:${process.env.PORT}/api/admin/allusers`,
-      {
-        headers: { Authorization: "Bearer " + token },
-        withCredentials: true,
-        params: { email: req.query.email },
-      }
-    );
+    const allusers = await axios.get(`/api/admin/allusers`, {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+      params: { email: req.query.email },
+    });
     return res.render("allusers", {
       allusers: allusers.data.data,
       message: req.flash("message"),
@@ -129,14 +117,11 @@ router.get("/userdetails", async (req, res) => {
     if (!token) {
       return res.send({ message: "No Token available" });
     }
-    const allusers = await axios.get(
-      `http://localhost:${process.env.PORT}/api/admin/userdetails`,
-      {
-        headers: { Authorization: "Bearer " + token },
-        withCredentials: true,
-        params: { idid: req.query.userid },
-      }
-    );
+    const allusers = await axios.get(`/api/admin/userdetails`, {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+      params: { idid: req.query.userid },
+    });
     return res.render("singleUserDetails", { data: allusers.data.data });
   } catch (error) {
     return res.send(error);
@@ -157,22 +142,16 @@ router.get("/deleteprofile", async (req, res) => {
     if (!token) {
       return res.send({ message: "No Token available" });
     }
-    const allusers = await axios.get(
-      `http://localhost:${process.env.PORT}/api/admin/allusers`,
-      {
-        headers: { Authorization: "Bearer " + token },
-        withCredentials: true,
-      }
-    );
+    const allusers = await axios.get(`/api/admin/allusers`, {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+    });
 
-    const deleteuser = await axios.get(
-      `http://localhost:${process.env.PORT}/api/admin/deleteprofile`,
-      {
-        headers: { Authorization: "Bearer " + token },
-        withCredentials: true,
-        params: { deleteId: req.query.deleteId },
-      }
-    );
+    const deleteuser = await axios.get(`/api/admin/deleteprofile`, {
+      headers: { Authorization: "Bearer " + token },
+      withCredentials: true,
+      params: { deleteId: req.query.deleteId },
+    });
     console.log("deleteuser.data.data.status", deleteuser.data.status);
 
     if (deleteuser.data.data) {
