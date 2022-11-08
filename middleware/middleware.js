@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const pool = require("../dbconfig/dbconfig");
 const multer = require("multer");
+const path = require("path");
 
 const authMiddleware = {};
 
@@ -84,7 +85,7 @@ authMiddleware.authorizationForUser = async (req, res, next) => {
 // Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/cv");
+    cb(null, path.join(__dirname, "../public/cv"));
   },
   filename: (req, file, cb) => {
     let filename = Date.now() + "--" + file.originalname;
@@ -96,7 +97,7 @@ const storage = multer.diskStorage({
 authMiddleware.upload = multer({
   storage: storage,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5 Mb
+    fileSize: 1 * 1024 * 1024, // 1 Mb
   },
 }).single("cv");
 
