@@ -98,7 +98,6 @@ userController.googleLogin = async (req, res) => {
       res.cookie("accessToken", accessToken, {
         maxAge: 1000 * 60 * 60 * 12,
       });
-      console.log("accesstoken", accessToken);
 
       req.flash("message", "Successfully Login");
       return res.status(200).redirect("/front/homepage");

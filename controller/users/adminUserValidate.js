@@ -13,7 +13,6 @@ exports.JobSanitizer = [
   check("job_description").trim(),
   check("salary").trim(),
   (req, res, next) => {
-    console.log("enter sanitize");
     next();
   },
 ];

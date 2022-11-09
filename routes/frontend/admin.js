@@ -16,7 +16,7 @@ router.get("/alljobs", async (req, res) => {
         withCredentials: true,
       }
     );
-    console.log("alljobs", alljobs.data);
+
     return res.render("allJobs", {
       alljobs: alljobs.data.data,
       message: req.flash("message"),
@@ -174,7 +174,6 @@ router.get("/deleteprofile", async (req, res) => {
         params: { deleteId: req.query.deleteId },
       }
     );
-    console.log("deleteuser.data.data.status", deleteuser.data.status);
 
     if (deleteuser.data.data) {
       if (deleteuser.data.status === "Fail") {
